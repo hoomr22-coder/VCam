@@ -80,6 +80,27 @@ static void vcamRefreshPreviews(void) {
 @implementation VCamFloatButton
 @end
 
+// 透明悬浮窗：只在按钮区域吃掉触摸，其余位置一律透传给宿主 App。
+// 1.0.2 用过裸 UIWindow（全屏 + hidden=NO），会抢 key window 并吃掉整屏触摸，
+// 在系统相机里表现为界面点不动 / 预览卡住。
+@interface VCamOverlayWindow : UIWindow
+@end
+
+@implementation VCamOverlayWindow
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *hit = [super hitTest:point withEvent:event];
+    if (hit == nil) return nil;
+    if (hit == self || hit == self.rootViewController.view) return nil;
+    return hit;
+}
+
+- (BOOL)canBecomeKeyWindow { return NO; }
+- (BOOL)canBecomeFocused { return NO; }
+
+@end
+
+
 static void setupFloatButton(void);
 static void handlePanGesture(UIPanGestureRecognizer *gesture);
 static void handleTapGesture(UITapGestureRecognizer *gesture);
@@ -112,7 +133,7 @@ static void setupFloatButton() {
         initWithTarget:g_floatButton action:@selector(handleTap:)];
     [g_floatButton addGestureRecognizer:tap];
     
-    g_overlayWindow = [[UIWindow alloc] initWithFrame:screen];
+    g_overlayWindow = [[VCamOverlayWindow alloc] initWithFrame:screen];
     g_overlayWindow.windowLevel = UIWindowLevelAlert + 100;
     g_overlayWindow.hidden = NO;
     g_overlayWindow.backgroundColor = [UIColor clearColor];
@@ -294,9 +315,25 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
         g_pickerDelegate = [[VCamImagePickerControllerDelegate alloc] init];
         
         NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
-        if (![bundleID isEqualToString:@"com.apple.springboard"]) {
-            %init(VCamHooks);
+        
+        // 硬保险：系统相机 / 照片 / 信息 / FaceTime 一律不注入。
+        // 这些 App 的预览层被替换或叠加后会把自带相机搞成不可用（点不动、预览卡住、
+        // 对焦反复拉风箱），而它们本来也不是替换对象。过滤器 plist 之外再兜一层，
+        // 防止旧的 filter 或全局加载把模块塞进相机进程。
+        NSSet *skipBundles = [NSSet setWithArray:@[
+            @"com.apple.springboard",
+            @"com.apple.camera",
+            @"com.apple.mobileslideshow",
+            @"com.apple.MobileSMS",
+            @"com.apple.facetime",
+            @"com.apple.InCallService",
+        ]];
+        if ([skipBundles containsObject:bundleID ?: @""]) {
+            NSLog(@"[VCam] skipped in %@", bundleID);
+            return;
         }
+        
+        %init(VCamHooks);
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), 
             dispatch_get_main_queue(), ^{
