@@ -1,5 +1,12 @@
 {
 	Filter = {
-		Mode = "Any";
+		Bundles = (
+			"com.apple.camera",
+			"com.tencent.xin",
+			"com.apple.mobileslideshow",
+			"com.apple.MobileSMS",
+			"com.apple.facetime",
+			"com.zhiliaoapp.musically"
+		);
 	};
 }
