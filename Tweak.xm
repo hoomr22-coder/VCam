@@ -12,6 +12,63 @@ static BOOL g_vcamEnabled = NO;
 static UIWindow *g_overlayWindow = nil;
 static UIButton *g_floatButton = nil;
 
+static AVPlayer *g_player = nil;
+static AVPlayerLayer *g_playerLayer = nil;
+static NSURL *g_videoURL = nil;
+static NSHashTable *g_previewLayers = nil;
+
+static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl);
+
+static void vcamEnsurePlayer(void) {
+    if (!g_videoURL) return;
+    if (!g_player) {
+        AVPlayerItem *item = [AVPlayerItem playerItemWithURL:g_videoURL];
+        g_player = [AVPlayer playerWithPlayerItem:item];
+        g_player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+        g_player.muted = YES;
+        __weak AVPlayer *weakPlayer = g_player;
+        [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification
+            object:item queue:[NSOperationQueue mainQueue]
+            usingBlock:^(NSNotification *note) {
+                [weakPlayer seekToTime:kCMTimeZero];
+                [weakPlayer play];
+            }];
+    }
+    if (!g_playerLayer) {
+        g_playerLayer = [AVPlayerLayer playerLayerWithPlayer:g_player];
+        g_playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        g_playerLayer.backgroundColor = [UIColor blackColor].CGColor;
+    }
+}
+
+static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl) {
+    if (!pl) return;
+    if (!g_vcamEnabled) {
+        if (g_playerLayer && g_playerLayer.superlayer == (CALayer *)pl) {
+            [g_playerLayer removeFromSuperlayer];
+        }
+        return;
+    }
+    vcamEnsurePlayer();
+    if (!g_playerLayer) return;
+    if (g_playerLayer.superlayer != (CALayer *)pl) {
+        [(CALayer *)pl addSublayer:g_playerLayer];
+    }
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    g_playerLayer.frame = [(CALayer *)pl bounds];
+    [CATransaction commit];
+    [g_player play];
+    NSLog(@"[VCam] overlay attached: %@ %.0fx%.0f", pl, [(CALayer *)pl bounds].size.width, [(CALayer *)pl bounds].size.height);
+}
+
+static void vcamRefreshPreviews(void) {
+    if (!g_previewLayers) return;
+    for (AVCaptureVideoPreviewLayer *pl in g_previewLayers.allObjects) {
+        vcamAttachPreview(pl);
+    }
+}
+
 // ============================================================================
 // MARK: - 悬浮按钮 UI
 // ============================================================================
@@ -123,6 +180,8 @@ static UIViewController *findTopViewController(void) {
     [[NSFileManager defaultManager] copyItemAtURL:url toURL:tempURL error:nil];
     
     [[MediaManager sharedManager] loadMediaFromURL:tempURL];
+    g_videoURL = tempURL;
+    vcamRefreshPreviews();
     g_vcamEnabled = YES;
     [[MediaManager sharedManager] start];
     if (g_floatButton) {
@@ -163,6 +222,7 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
     [alert addAction:[UIAlertAction actionWithTitle:g_vcamEnabled ? @"关闭虚拟相机" : @"开启虚拟相机" 
         style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
         g_vcamEnabled = !g_vcamEnabled;
+        vcamRefreshPreviews();
         if (g_floatButton) {
             g_floatButton.backgroundColor = g_vcamEnabled 
                 ? [UIColor colorWithRed:0.2 green:0.8 blue:0.4 alpha:0.9]
@@ -191,47 +251,36 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
 
 %group VCamHooks
 
-%hook AVCaptureSession
-- (void)startRunning { %orig; }
-- (void)stopRunning { %orig; }
-%end
-
-%hook AVCaptureVideoDataOutput
-- (void)setSampleBufferDelegate:(id<AVCaptureVideoDataOutputSampleBufferDelegate>)delegate 
-                          queue:(dispatch_queue_t)queue {
-    %orig;
-}
-%end
-
-// Intercept frame delegate callback -> substitute with fake frames
-%hook NSObject
-- (void)captureOutput:(AVCaptureOutput *)output 
-    didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer 
-           fromConnection:(AVCaptureConnection *)connection {
-    
-    if (g_vcamEnabled && [[MediaManager sharedManager] isRunning]) {
-        CMSampleBufferRef fakeFrame = [[MediaManager sharedManager] nextVideoFrame];
-        if (fakeFrame) {
-            %orig(output, fakeFrame, connection);
-            CFRelease(fakeFrame);
-            return;
-        }
-    }
-    %orig;
-}
-%end
-
-%hook AVCapturePhotoOutput
-- (void)capturePhotoWithSettings:(AVCapturePhotoSettings *)settings 
-                        delegate:(id<AVCapturePhotoCaptureDelegate>)delegate {
-    %orig;
-}
-%end
-
+// Replace the live preview picture with a looping video layer.
 %hook AVCaptureVideoPreviewLayer
+
+- (id)initWithSession:(AVCaptureSession *)session {
+    self = %orig;
+    if (self) {
+        if (!g_previewLayers) g_previewLayers = [NSHashTable weakObjectsHashTable];
+        [g_previewLayers addObject:self];
+        vcamAttachPreview(self);
+    }
+    return self;
+}
+
 - (void)setSession:(AVCaptureSession *)session {
     %orig;
+    if (!g_previewLayers) g_previewLayers = [NSHashTable weakObjectsHashTable];
+    [g_previewLayers addObject:self];
+    vcamAttachPreview(self);
 }
+
+- (void)layoutSublayers {
+    %orig;
+    if (g_playerLayer && g_playerLayer.superlayer == (CALayer *)self) {
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        g_playerLayer.frame = [(CALayer *)self bounds];
+        [CATransaction commit];
+    }
+}
+
 %end
 
 %end // VCamHooks group
