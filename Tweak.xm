@@ -3,6 +3,8 @@
 #import <CoreMedia/CoreMedia.h>
 #import <ImageIO/ImageIO.h>
 #import <objc/runtime.h>
+#import <objc/message.h>
+#import <dlfcn.h>
 #import <substrate.h>
 #import "MediaManager.h"
 
@@ -13,6 +15,21 @@
 static BOOL g_vcamEnabled = NO;
 static UIWindow *g_overlayWindow = nil;
 static UIButton *g_floatButton = nil;
+
+// ---- 1.0.15: 无图标交互（音量键唤起，悬浮球默认隐藏） ----
+// 音量键走两条互不依赖的通道，任一条收到就够：
+//   A. AVSystemController 的音量变化通知（进程内、可靠；方向靠比对前后音量）
+//   B. UIApplication sendEvent 里的 GSEvent（type 12/13 直接给方向；不同 iOS 版本可能变）
+// 两条都只观察不拦截：音量照常变化，"上一格 → 下一格"一个来回净变化为 0。
+static BOOL g_showButton = NO;        // config.plist 的 showButton，默认隐藏
+static BOOL g_volumeHooked = NO;
+static int  g_volNotif = 0;
+static int  g_volUp = 0;
+static int  g_volDown = 0;
+static int  g_lastGsType = -1;
+static float g_lastVolume = -1.0f;
+static BOOL g_volUpPending = NO;
+static double g_volUpTime = 0;
 
 static AVPlayer *g_player = nil;
 static AVPlayerLayer *g_playerLayer = nil;
@@ -35,6 +52,7 @@ static void vcamLoadGlobalConfig(void) {
     NSDictionary *cfg = [NSDictionary dictionaryWithContentsOfFile:
         [kVCamGlobalDir stringByAppendingPathComponent:@"config.plist"]];
     BOOL enabled = cfg[@"enabled"] ? [cfg[@"enabled"] boolValue] : YES;
+    g_showButton = cfg[@"showButton"] ? [cfg[@"showButton"] boolValue] : NO;
     g_videoURL = [NSURL fileURLWithPath:mp4];
     g_vcamEnabled = enabled;
     NSLog(@"[VCam] global video %@ enabled=%d", mp4, enabled);
@@ -223,12 +241,14 @@ static NSString *vcamDiagString(void) {
     if (!g_player) return @"player = nil";
     AVPlayerItem *it = g_player.currentItem;
     return [NSString stringWithFormat:
-        @"enabled=%d app=%ld\ntimeControl=%ld rate=%.2f\nplayerStatus=%ld itemStatus=%ld\nt=%.2f / %.2f layer=%d\nwd=%d restarts=%d\nvideo=%@",
+        @"enabled=%d app=%ld\ntimeControl=%ld rate=%.2f\nplayerStatus=%ld itemStatus=%ld\nt=%.2f / %.2f layer=%d\nwd=%d restarts=%d\nvol: gs=%d n=%d up=%d dn=%d btn=%d\nvideo=%@",
         g_vcamEnabled, (long)[UIApplication sharedApplication].applicationState,
         (long)g_player.timeControlStatus, g_player.rate,
         (long)g_player.status, (long)it.status,
         CMTimeGetSeconds(g_player.currentTime), CMTimeGetSeconds(it.duration),
         g_playerLayer.superlayer != nil, g_wdTicks, g_restarts,
+        g_lastGsType, g_volNotif, g_volUp, g_volDown,
+        (g_overlayWindow && !g_overlayWindow.hidden),
         g_videoURL.lastPathComponent ?: @"(none)"];
 }
 
@@ -461,7 +481,27 @@ static UIViewController *findTopViewController(void) {
 
 static VCamImagePickerControllerDelegate *g_pickerDelegate = nil;
 
-static void handleTapGesture(UITapGestureRecognizer *gesture) {
+// 悬浮球默认隐藏；偏好优先读 NSUserDefaults（沙箱内可写，按 App 记忆），
+// 没有记录时退回 deb 里 config.plist 的 showButton。
+static BOOL vcamButtonPref(void) {
+    id v = [[NSUserDefaults standardUserDefaults] objectForKey:@"VCamShowButton"];
+    if (v) return [v boolValue];
+    return g_showButton;
+}
+
+static void vcamSetButtonVisible(BOOL show) {
+    [[NSUserDefaults standardUserDefaults] setBool:show forKey:@"VCamShowButton"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if (show) {
+        setupFloatButton();
+        g_overlayWindow.hidden = NO;
+    } else if (g_overlayWindow) {
+        g_overlayWindow.hidden = YES;
+    }
+    NSLog(@"[VCam] button visible=%d", show);
+}
+
+static void vcamShowMenu(UIView *sourceView) {
     UIViewController *topVC = findTopViewController();
     if (!topVC) return;
     
@@ -508,14 +548,97 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
         [top presentViewController:d animated:YES completion:nil];
     }]];
     
+    [alert addAction:[UIAlertAction actionWithTitle:(g_overlayWindow && !g_overlayWindow.hidden) ? @"隐藏悬浮球" : @"显示悬浮球"
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        vcamSetButtonVisible(!(g_overlayWindow && !g_overlayWindow.hidden));
+    }]];
+    
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
     
     if (alert.popoverPresentationController) {
-        alert.popoverPresentationController.sourceView = gesture.view;
-        alert.popoverPresentationController.sourceRect = gesture.view.bounds;
+        UIView *src = sourceView ?: topVC.view;
+        alert.popoverPresentationController.sourceView = src;
+        alert.popoverPresentationController.sourceRect =
+            CGRectMake(CGRectGetMidX(src.bounds), CGRectGetMidY(src.bounds), 1, 1);
     }
     
     [topVC presentViewController:alert animated:YES completion:nil];
+}
+
+static void handleTapGesture(UITapGestureRecognizer *gesture) {
+    vcamShowMenu(gesture.view);
+}
+
+// ---- 音量键：上一格 → 下一格（1 秒内）唤出菜单 ----
+
+static void vcamVolumeEvent(BOOL up) {
+    // 关掉虚拟相机后仍然要能唤出菜单，否则「无按钮 + 音量键不响应」= 再也打不开
+    double now = CACurrentMediaTime();
+    if (up) {
+        g_volUp++;
+        g_volUpTime = now;
+        g_volUpPending = YES;
+        return;
+    }
+    g_volDown++;
+    if (!g_volUpPending || now - g_volUpTime > 1.0) return;
+    g_volUpPending = NO;
+    NSLog(@"[VCam] volume trigger (up->down)");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        vcamShowMenu(nil);
+    });
+}
+
+// GSEventGetType 是 GraphicsServices 的私有符号，用 dlsym 取，避免链私有 framework
+typedef uint32_t (*VCamGSEventGetTypeFn)(void *);
+static uint32_t vcamGSEventType(void *gs) {
+    static VCamGSEventGetTypeFn fn = NULL;
+    static BOOL tried = NO;
+    if (!tried) {
+        tried = YES;
+        fn = (VCamGSEventGetTypeFn)dlsym(RTLD_DEFAULT, "GSEventGetType");
+    }
+    return fn ? fn(gs) : 0xFFFFFFFFu;
+}
+
+@interface VCamAVSystemController : NSObject
++ (instancetype)sharedAVSystemController;
+- (BOOL)setAttribute:(id)attribute forKey:(NSString *)key error:(NSError **)error;
+- (BOOL)getActiveCategoryVolume:(float *)volume andName:(NSString **)name;
+@end
+
+static void vcamStartVolumeMonitor(void) {
+    if (g_volumeHooked) return;
+    g_volumeHooked = YES;
+    Class cls = NSClassFromString(@"AVSystemController");
+    if (!cls) {
+        NSLog(@"[VCam] volume: no AVSystemController");
+        return;
+    }
+    id sys = ((id (*)(id, SEL))objc_msgSend)(cls, @selector(sharedAVSystemController));
+    float v = 0;
+    NSString *name = nil;
+    if (((BOOL (*)(id, SEL, float *, NSString **))objc_msgSend)(
+            sys, @selector(getActiveCategoryVolume:andName:), &v, &name)) {
+        g_lastVolume = v;
+    }
+    ((BOOL (*)(id, SEL, id, id, NSError **))objc_msgSend)(
+        sys, @selector(setAttribute:forKey:error:),
+        @"On", @"AVSystemController_SystemVolumeDidChangeNotification", NULL);
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"AVSystemController_SystemVolumeDidChangeNotification"
+        object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        g_volNotif++;
+        NSDictionary *info = note.userInfo;
+        NSString *reason = info[@"AVSystemController_AudioVolumeChangeReasonNotificationParameter"];
+        if (reason && ![reason isEqualToString:@"ExplicitVolumeChange"]) return;
+        float nv = [info[@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+        if (g_lastVolume >= 0) {
+            if (nv > g_lastVolume + 0.001f) vcamVolumeEvent(YES);
+            else if (nv < g_lastVolume - 0.001f) vcamVolumeEvent(NO);
+        }
+        g_lastVolume = nv;
+    }];
+    NSLog(@"[VCam] volume monitor started (vol=%.2f)", g_lastVolume);
 }
 
 // ============================================================================
@@ -616,6 +739,32 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
 %end // VCamCaptureHooks group
 
 // ============================================================================
+// MARK: - 音量键 hook
+// ============================================================================
+
+%group VCamVolumeHooks
+
+%hook UIApplication
+
+// 音量键按下会作为 GSEvent 走 sendEvent。只读不拦，type 12=上 / 13=下。
+- (void)sendEvent:(UIEvent *)event {
+    %orig;
+    SEL gsSel = NSSelectorFromString(@"_gsEvent");
+    if (![event respondsToSelector:gsSel]) return;
+    void *gs = ((void *(*)(id, SEL))objc_msgSend)(event, gsSel);
+    if (!gs) return;
+    uint32_t t = vcamGSEventType(gs);
+    if (t == 0xFFFFFFFFu) return;
+    g_lastGsType = (int)t;
+    if (t == 12) vcamVolumeEvent(YES);
+    else if (t == 13) vcamVolumeEvent(NO);
+}
+
+%end
+
+%end // VCamVolumeHooks group
+
+// ============================================================================
 // MARK: - Constructor
 // ============================================================================
 
@@ -634,13 +783,28 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
         
         %init(VCamHooks);
         %init(VCamCaptureHooks);
+        %init(VCamVolumeHooks);
         vcamLoadGlobalConfig();
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), 
             dispatch_get_main_queue(), ^{
                 @autoreleasepool {
-                    setupFloatButton();
+                    if (vcamButtonPref()) setupFloatButton();
+                    vcamStartVolumeMonitor();
                     vcamStartWatchdog();
+                }
+            });
+        
+        // 兜底：两条音量通道都没反应（机型/系统改了事件路径）时把悬浮球放出来，
+        // 否则"无图标 + 音量键失效"会把唯一入口弄丢。
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8.0 * NSEC_PER_SEC)),
+            dispatch_get_main_queue(), ^{
+                @autoreleasepool {
+                    if (g_volNotif == 0 && g_volUp == 0 && g_volDown == 0) {
+                        NSLog(@"[VCam] volume trigger silent -> fallback button");
+                        setupFloatButton();
+                        g_overlayWindow.hidden = NO;
+                    }
                 }
             });
     }
