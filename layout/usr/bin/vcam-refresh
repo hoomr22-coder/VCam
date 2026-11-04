@@ -1,0 +1,77 @@
+#!/bin/bash
+# VCam 作用域白名单生成器
+#
+# 作用：把「随包发布的系统清单(VCam.base)」+「机器上所有声明了相机权限的 App」
+#       合并成 ellekit 读的 Filter plist。装完 deb 由 postinst 调一次；
+#       之后新装了 App，在 NewTerm 里跑一次 vcam-refresh 再重开那个 App 即可。
+#
+# 为什么只收 NSCameraUsageDescription：声明了相机权限的才是可能调相机的 App，
+# 银行/游戏/工具类天然被排除，不用维护黑名单。
+#
+# 环境变量只为在 PC 上做离线自测（见 README/CI），设备上不要设置。
+set -u
+
+DIR=${VCAM_DIR:-/var/jb/Library/MobileSubstrate/DynamicLibraries}
+APPS=${VCAM_APPS:-/var/mobile/Containers/Bundle/Application}
+PLUTIL=${VCAM_PLUTIL:-/usr/bin/plutil}
+
+PLIST="$DIR/VCam.plist"
+BASE="$DIR/VCam.base"
+TMP="/tmp/vcam_bundles.$$"
+OUT="/tmp/vcam_plist.$$"
+trap 'rm -f "$TMP" "$OUT"' EXIT
+
+: > "$TMP"
+
+add() {
+    [ -n "${1:-}" ] || return 0
+    grep -qxF "$1" "$TMP" 2>/dev/null && return 0
+    echo "$1" >> "$TMP"
+}
+
+# 1) 系统清单（相机/FaceTime/短信/微信…），随包更新
+if [ -f "$BASE" ]; then
+    while IFS= read -r line; do
+        case "$line" in ''|'#'*) continue;; esac
+        add "${line%$'\r'}"
+    done < "$BASE"
+fi
+
+# 2) 已装 App：Info.plist 里带 NSCameraUsageDescription 的
+for app in "$APPS"/*/*.app; do
+    [ -d "$app" ] || continue
+    info="$app/Info.plist"
+    [ -f "$info" ] || continue
+    xml=$("$PLUTIL" -convert xml1 -o - "$info" 2>/dev/null) || continue
+    [ -n "$xml" ] || continue
+    printf '%s\n' "$xml" | grep -q '<key>NSCameraUsageDescription</key>' || continue
+    id=$(printf '%s\n' "$xml" \
+        | grep -A1 '<key>CFBundleIdentifier</key>' \
+        | grep -o '<string>[^<]*' | head -1 | sed 's/<string>//')
+    [ -n "$id" ] && add "$id"
+done
+
+count=$(wc -l < "$TMP" | tr -d ' ')
+
+# 保险：解析全失败（plutil 不存在 / 容器路径变了）时保留原 plist，别把插件弄死
+if [ "${count:-0}" -lt 10 ]; then
+    echo "[vcam-refresh] only ${count:-0} bundles, keep existing $PLIST"
+    exit 1
+fi
+
+{
+    echo '{'
+    echo '	Filter = {'
+    echo '		Bundles = ('
+    while IFS= read -r id; do
+        echo "			\"$id\","
+    done < "$TMP"
+    echo '		);'
+    echo '	};'
+    echo '}'
+} > "$OUT"
+
+[ -f "$PLIST" ] && cp -f "$PLIST" "$PLIST.bak"
+mv -f "$OUT" "$PLIST"
+chmod 644 "$PLIST"
+echo "[vcam-refresh] $count bundles -> $PLIST"

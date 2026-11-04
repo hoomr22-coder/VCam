@@ -1,11 +1,23 @@
 #!/bin/bash
+# 安装/升级后：修权限 → 重新生成作用域白名单 → 让 SpringBoard/相机重载 dylib
+JB=/var/jb
+DL="$JB/Library/MobileSubstrate/DynamicLibraries"
 
-# 设置权限
-chmod 755 /Library/MobileSubstrate/DynamicLibraries/VCam.dylib
-chmod 644 /Library/MobileSubstrate/DynamicLibraries/VCam.plist
+# rootless 下真实路径在 /var/jb，写 /Library/... 是空操作
+chmod 755 "$DL/VCam.dylib" 2>/dev/null
+chmod 644 "$DL/VCam.plist" 2>/dev/null
+chmod 644 "$DL/VCam.base" 2>/dev/null
+[ -f "$JB/usr/bin/vcam-refresh" ] && chmod 755 "$JB/usr/bin/vcam-refresh"
 
-# 重启 SpringBoard 加载插件；顺手把还在跑的相机进程杀掉，否则它仍用旧 dylib
-killall -9 SpringBoard
+# 生成白名单：系统清单 + 所有声明了相机权限的已装 App
+if [ -x "$JB/usr/bin/vcam-refresh" ]; then
+    "$JB/usr/bin/vcam-refresh"
+elif [ -f "$JB/usr/bin/vcam-refresh" ]; then
+    /bin/bash "$JB/usr/bin/vcam-refresh"
+fi
+
+# 已在跑的进程仍持有旧 dylib，必须一起杀掉
+killall -9 SpringBoard 2>/dev/null
 killall -9 Camera 2>/dev/null
 
 exit 0

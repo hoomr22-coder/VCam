@@ -1,8 +1,8 @@
 Package: com.yourname.vcam
 Name: VCam
-Version: 1.0.15
+Version: 1.0.16
 Architecture: iphoneos-arm
-Description: 开源虚拟相机插件 - 替换摄像头输入为自定义视频
+Description: 虚拟相机；音量键唤起；按已装相机 App 自动生成作用域
 Maintainer: Your Name
 Author: Your Name
 Section: Tweaks
