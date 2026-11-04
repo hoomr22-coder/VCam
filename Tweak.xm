@@ -19,6 +19,26 @@ static NSHashTable *g_previewLayers = nil;
 
 static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl);
 
+// 全局素材：/var/jb/Library/Application Support/VCam/video.mp4
+// 打包时塞进 deb，所有注入了插件的 App 打开即用同一段视频，不必逐个选片。
+// config.plist 里 "enabled" = false 可全局关掉默认启用。
+static NSString *const kVCamGlobalDir = @"/var/jb/Library/Application Support/VCam";
+
+static void vcamLoadGlobalConfig(void) {
+    NSString *mp4 = [kVCamGlobalDir stringByAppendingPathComponent:@"video.mp4"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:mp4]) {
+        NSLog(@"[VCam] no global video at %@", mp4);
+        return;
+    }
+    NSDictionary *cfg = [NSDictionary dictionaryWithContentsOfFile:
+        [kVCamGlobalDir stringByAppendingPathComponent:@"config.plist"]];
+    BOOL enabled = cfg[@"enabled"] ? [cfg[@"enabled"] boolValue] : YES;
+    g_videoURL = [NSURL fileURLWithPath:mp4];
+    g_vcamEnabled = enabled;
+    NSLog(@"[VCam] global video %@ enabled=%d", mp4, enabled);
+}
+
+
 static void vcamEnsurePlayer(void) {
     if (!g_videoURL) return;
     if (!g_player) {
@@ -316,24 +336,15 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
         
         NSString *bundleID = [[NSBundle mainBundle] bundleIdentifier];
         
-        // 硬保险：系统相机 / 照片 / 信息 / FaceTime 一律不注入。
-        // 这些 App 的预览层被替换或叠加后会把自带相机搞成不可用（点不动、预览卡住、
-        // 对焦反复拉风箱），而它们本来也不是替换对象。过滤器 plist 之外再兜一层，
-        // 防止旧的 filter 或全局加载把模块塞进相机进程。
-        NSSet *skipBundles = [NSSet setWithArray:@[
-            @"com.apple.springboard",
-            @"com.apple.camera",
-            @"com.apple.mobileslideshow",
-            @"com.apple.MobileSMS",
-            @"com.apple.facetime",
-            @"com.apple.InCallService",
-        ]];
-        if ([skipBundles containsObject:bundleID ?: @""]) {
+        // 只跳过 SpringBoard：桌面不需要悬浮按钮，注进去只会添乱。
+        // 其余 App（含系统相机 / FaceTime / 信息 / Safari）全部注入 = 系统级替换。
+        if ([bundleID isEqualToString:@"com.apple.springboard"]) {
             NSLog(@"[VCam] skipped in %@", bundleID);
             return;
         }
         
         %init(VCamHooks);
+        vcamLoadGlobalConfig();
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), 
             dispatch_get_main_queue(), ^{
