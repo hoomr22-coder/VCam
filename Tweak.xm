@@ -400,11 +400,13 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
     NSURL *url = objc_getAssociatedObject(self, kVCamMovieURLKey);
     if (!url.isFileURL) return;
     NSString *path = url.path;
-    // 等 capture 把文件收尾（delegate 回调 + moov 写完）再覆盖，1.2s 是实测折中值
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
-        vcamReplaceMovieAtPath(path);
-    });
+    // 落盘收尾有时间差：0.4s / 1.0s / 2.0s 各试一次（幂等，后一次覆盖前一次）
+    for (NSNumber *delay in @[@0.4, @1.0, @2.0]) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay.doubleValue * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            vcamReplaceMovieAtPath(path);
+        });
+    }
 }
 
 %end
