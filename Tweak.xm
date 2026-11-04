@@ -422,7 +422,7 @@ static NSData *vcamDechunk(NSData *body) {
     NSMutableData *out = [NSMutableData data];
     const uint8_t *p = (const uint8_t *)body.bytes, *end = p + body.length;
     while (p < end) {
-        const uint8_t *nl = memchr(p, '\n', (size_t)(end - p));
+        const uint8_t *nl = (const uint8_t *)memchr(p, 0x0A, (size_t)(end - p));
         if (!nl) break;
         long len = strtol((const char *)p, NULL, 16);
         p = nl + 1;
