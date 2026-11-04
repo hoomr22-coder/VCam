@@ -68,3 +68,15 @@ ssh root@设备IP "killall -9 SpringBoard"
 ## License
 
 MIT
+
+## PC（8899）→ 手机相机
+
+两条通道，优先用第一条：
+
+1. **DCIM（不依赖网络）**：`python tools/push_clip.py blink` → 片段落到
+   `/var/mobile/Media/DCIM/VCamVirtual.mp4`。相机里自动载入，或菜单点「载入 DCIM 最新片段」。
+   Camera.app 的沙箱本来就允许读写 DCIM，所以这条路不会卡在 App 网络权限上。
+2. **局域网拉取**：`config.plist` 的 `sourceURL` 指向 `http://<PC>:8899/clip/<key>.mp4`，
+   开相机 3 秒后自动拉一次，菜单里也能手动拉。需要 PC 的 studio 以 `--host 0.0.0.0` 启动。
+
+换片后必须重建 AVPlayer（`vcamSwapVideo`），只改 `g_videoURL` 画面不会变。
