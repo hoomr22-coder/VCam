@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
+#import <ImageIO/ImageIO.h>
 #import <objc/runtime.h>
 #import <substrate.h>
 #import "MediaManager.h"
@@ -47,11 +48,20 @@ static void vcamLoadGlobalConfig(void) {
 // 二者都用同一段 g_videoURL：照片抽当前播放位置的一帧，录像整段文件替换。
 static const void *kVCamMovieURLKey = &kVCamMovieURLKey;
 
-static NSData *vcamCaptureJPEG(void) {
-    if (!g_videoURL) return nil;
+// 拍照替换必须"零阻塞"：fileDataRepresentation 是在拍照回调链上调用的，
+// 在这里同步解码视频/编码大图会把 capture 管线堵住，系统相机表现为预览冻住、
+// 对焦反复拉风箱、整机点不动（1.0.8 就是这么挂的）。
+// 做法：第一次遇到某种尺寸时先返回真图，同时在后台把这一尺寸的替换图渲染好缓存，
+//       之后同一尺寸的照片直接返回缓存字节（纯内存读，微秒级）。
+static NSCache *g_photoCache = nil;
+static NSMutableSet *g_photoPending = nil;
+static dispatch_queue_t g_photoQueue = nil;
+
+static CGImageRef vcamFrameCGImage(void) {
+    if (!g_videoURL) return NULL;
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:g_videoURL options:nil];
     double dur = CMTimeGetSeconds(asset.duration);
-    if (!(dur > 0)) return nil;
+    if (!(dur > 0)) return NULL;
     AVAssetImageGenerator *gen = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
     gen.appliesPreferredTrackTransform = YES;
     gen.requestedTimeToleranceBefore = kCMTimeZero;
@@ -59,12 +69,76 @@ static NSData *vcamCaptureJPEG(void) {
     double t = fmod(CACurrentMediaTime(), dur);
     NSError *err = nil;
     CGImageRef cg = [gen copyCGImageAtTime:CMTimeMakeWithSeconds(t, 600) actualTime:NULL error:&err];
-    if (!cg) { NSLog(@"[VCam] photo frame grab failed: %@", err); return nil; }
-    UIImage *img = [UIImage imageWithCGImage:cg];
-    CGImageRelease(cg);
-    NSData *jpeg = UIImageJPEGRepresentation(img, 0.92);
-    NSLog(@"[VCam] photo replaced: %.0fx%.0f %lu bytes", img.size.width, img.size.height, (unsigned long)jpeg.length);
-    return jpeg;
+    if (!cg) NSLog(@"[VCam] frame grab failed: %@", err);
+    return cg;
+}
+
+static NSData *vcamEncodeImage(CGImageRef img, BOOL heic) {
+    NSMutableData *out = [NSMutableData data];
+    CFStringRef uti = heic ? CFSTR("public.heic") : CFSTR("public.jpeg");
+    CGImageDestinationRef dest = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)out, uti, 1, NULL);
+    if (!dest) return nil;
+    NSDictionary *opts = @{(__bridge NSString *)kCGImageDestinationLossyCompressionQuality: @0.9};
+    CGImageDestinationAddImage(dest, img, (__bridge CFDictionaryRef)opts);
+    BOOL ok = CGImageDestinationFinalize(dest);
+    CFRelease(dest);
+    return ok ? out : nil;
+}
+
+// 从原始照片里读出像素尺寸和容器类型，键用于缓存
+static NSString *vcamPhotoKey(NSData *data, CGSize *size, BOOL *heic) {
+    CGImageSourceRef src = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
+    if (!src) return nil;
+    NSDictionary *props = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(src, 0, NULL));
+    CFStringRef type = CGImageSourceGetType(src);
+    BOOL isHeic = type && CFStringCompare(type, CFSTR("public.heic"), 0) == kCFCompareEqualTo;
+    CFRelease(src);
+    if (!props) return nil;
+    CGFloat w = [props[(__bridge NSString *)kCGImagePropertyPixelWidth] doubleValue];
+    CGFloat h = [props[(__bridge NSString *)kCGImagePropertyPixelHeight] doubleValue];
+    if (w <= 0 || h <= 0) return nil;
+    if (size) *size = CGSizeMake(w, h);
+    if (heic) *heic = isHeic;
+    return [NSString stringWithFormat:@"%.0fx%.0f/%d", w, h, isHeic];
+}
+
+static void vcamRenderPhotoAsync(NSString *key, CGSize size, BOOL heic) {
+    if (!g_photoQueue) g_photoQueue = dispatch_queue_create("com.vcam.photo", DISPATCH_QUEUE_SERIAL);
+    if (!g_photoCache) { g_photoCache = [[NSCache alloc] init]; g_photoCache.countLimit = 6; }
+    if (!g_photoPending) g_photoPending = [NSMutableSet set];
+    @synchronized (g_photoPending) {
+        if ([g_photoPending containsObject:key]) return;
+        [g_photoPending addObject:key];
+    }
+    dispatch_async(g_photoQueue, ^{
+        @autoreleasepool {
+            CGImageRef src = vcamFrameCGImage();
+            if (src) {
+                size_t W = (size_t)MAX(size.width, 1), H = (size_t)MAX(size.height, 1);
+                CGColorSpaceRef cs = CGColorSpaceCreateDeviceRGB();
+                CGContextRef ctx = CGBitmapContextCreate(NULL, W, H, 8, 0, cs, kCGImageAlphaNoneSkipLast);
+                if (ctx) {
+                    CGFloat sw = (CGFloat)CGImageGetWidth(src), sh = (CGFloat)CGImageGetHeight(src);
+                    CGFloat scale = MAX(W / sw, H / sh);
+                    CGRect r = CGRectMake((W - sw * scale) / 2.0, (H - sh * scale) / 2.0, sw * scale, sh * scale);
+                    CGContextDrawImage(ctx, r, src);
+                    CGImageRef scaled = CGBitmapContextCreateImage(ctx);
+                    if (scaled) {
+                        NSData *enc = vcamEncodeImage(scaled, heic);
+                        if (enc.length) {
+                            [g_photoCache setObject:enc forKey:key];
+                            NSLog(@"[VCam] photo cache ready %@ %lu B", key, (unsigned long)enc.length);
+                        }
+                        CGImageRelease(scaled);
+                    }
+                    CGContextRelease(ctx);
+                }
+                CGColorSpaceRelease(cs);
+                CGImageRelease(src);
+            }
+            @synchronized (g_photoPending) { [g_photoPending removeObject:key]; }
+        }
+    });
 }
 
 static BOOL vcamReplaceMovieAtPath(NSString *path) {
@@ -374,11 +448,19 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
 %hook AVCapturePhoto
 
 - (NSData *)fileDataRepresentation {
-    if (g_vcamEnabled) {
-        NSData *fake = vcamCaptureJPEG();
-        if (fake.length > 0) return fake;
+    NSData *orig = %orig;
+    if (!g_vcamEnabled || !g_videoURL || orig.length < 32) return orig;
+    CGSize size = CGSizeZero;
+    BOOL heic = NO;
+    NSString *key = vcamPhotoKey(orig, &size, &heic);
+    if (!key) return orig;
+    NSData *hit = [g_photoCache objectForKey:key];
+    if (hit.length > 0) {
+        NSLog(@"[VCam] photo replaced %@ %lu B", key, (unsigned long)hit.length);
+        return hit;                       // 纯内存返回，不碰 capture 管线
     }
-    return %orig;
+    vcamRenderPhotoAsync(key, size, heic); // 这一张先给真图，后台把该尺寸渲染好
+    return orig;
 }
 
 %end
