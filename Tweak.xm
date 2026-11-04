@@ -213,6 +213,18 @@ static BOOL g_watchdogStarted = NO;
 static int g_stallTicks = 0;
 static int g_diagTicks = 0;
 
+// 屏幕上的自检信息（点 📷 → 状态），不依赖 syslog
+static NSString *vcamDiagString(void) {
+    if (!g_player) return @"player = nil";
+    AVPlayerItem *it = g_player.currentItem;
+    return [NSString stringWithFormat:
+        @"enabled=%d\ntimeControl=%ld rate=%.2f\nt=%.2f / %.2f\nitemStatus=%ld layer=%d\nvideo=%@",
+        g_vcamEnabled, (long)g_player.timeControlStatus, g_player.rate,
+        CMTimeGetSeconds(g_player.currentTime), CMTimeGetSeconds(it.duration),
+        (long)it.status, g_playerLayer.superlayer != nil,
+        g_videoURL.lastPathComponent ?: @"(none)"];
+}
+
 // 把 item 整个换掉并从头播：比 seek 更狠，能解开 "rate=1 但一帧不动" 的僵死
 static void vcamHardRestart(void) {
     if (!g_videoURL || !g_player) return;
@@ -472,6 +484,15 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
         } else {
             [[MediaManager sharedManager] stop];
         }
+    }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"状态（诊断）"
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        UIAlertController *d = [UIAlertController alertControllerWithTitle:@"VCam 状态"
+            message:vcamDiagString() preferredStyle:UIAlertControllerStyleAlert];
+        [d addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
+        UIViewController *top = findTopViewController();
+        [top presentViewController:d animated:YES completion:nil];
     }]];
     
     [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
