@@ -1,8 +1,17 @@
 {
 	Filter = {
 		Bundles = (
+			"com.zhiliaoapp.musically",
 			"com.tencent.xin",
-			"com.zhiliaoapp.musically"
+			"com.burbn.instagram",
+			"com.facebook.Facebook",
+			"com.atebits.Tweetie2",
+			"net.whatsapp.WhatsApp",
+			"net.whatsapp.WhatsAppSMB",
+			"ph.telegra.Telegraph",
+			"com.jiangjia.gif",
+			"com.xingin.discover",
+			"jp.naver.line"
 		);
 	};
 }
