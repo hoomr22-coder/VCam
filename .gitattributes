@@ -1,0 +1,6 @@
+# 设备上执行的东西必须是 LF：iOS 的 bash 遇到 CRLF 会在每行尾报
+# "unexpected EOF / $'\r': command not found"，postinst 直接失效。
+*.sh                text eol=lf
+control             text eol=lf
+layout/DEBIAN/*     text eol=lf
+layout/usr/bin/*    text eol=lf
