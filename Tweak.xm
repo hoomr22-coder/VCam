@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import <CoreMedia/CoreMedia.h>
+#import <objc/runtime.h>
 #import <substrate.h>
 #import "MediaManager.h"
 
@@ -38,6 +39,43 @@ static void vcamLoadGlobalConfig(void) {
     NSLog(@"[VCam] global video %@ enabled=%d", mp4, enabled);
 }
 
+
+// ---- 拍照 / 录像输出替换 ----
+// 预览层只改"看到什么"，拍照/录像走的是另一条路，这里补上：
+//   * AVCapturePhoto.fileDataRepresentation —— 拍照产物（JPEG/HEIF 字节）
+//   * AVCaptureMovieFileOutput             —— 录像落盘的文件
+// 二者都用同一段 g_videoURL：照片抽当前播放位置的一帧，录像整段文件替换。
+static const void *kVCamMovieURLKey = &kVCamMovieURLKey;
+
+static NSData *vcamCaptureJPEG(void) {
+    if (!g_videoURL) return nil;
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:g_videoURL options:nil];
+    double dur = CMTimeGetSeconds(asset.duration);
+    if (!(dur > 0)) return nil;
+    AVAssetImageGenerator *gen = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+    gen.appliesPreferredTrackTransform = YES;
+    gen.requestedTimeToleranceBefore = kCMTimeZero;
+    gen.requestedTimeToleranceAfter = kCMTimeZero;
+    double t = fmod(CACurrentMediaTime(), dur);
+    NSError *err = nil;
+    CGImageRef cg = [gen copyCGImageAtTime:CMTimeMakeWithSeconds(t, 600) actualTime:NULL error:&err];
+    if (!cg) { NSLog(@"[VCam] photo frame grab failed: %@", err); return nil; }
+    UIImage *img = [UIImage imageWithCGImage:cg];
+    CGImageRelease(cg);
+    NSData *jpeg = UIImageJPEGRepresentation(img, 0.92);
+    NSLog(@"[VCam] photo replaced: %.0fx%.0f %lu bytes", img.size.width, img.size.height, (unsigned long)jpeg.length);
+    return jpeg;
+}
+
+static BOOL vcamReplaceMovieAtPath(NSString *path) {
+    if (!path || !g_videoURL) return NO;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    [fm removeItemAtPath:path error:nil];
+    NSError *err = nil;
+    BOOL ok = [fm copyItemAtURL:g_videoURL toURL:[NSURL fileURLWithPath:path] error:&err];
+    NSLog(@"[VCam] movie replaced -> %@ ok=%d err=%@", path.lastPathComponent, ok, err);
+    return ok;
+}
 
 static void vcamEnsurePlayer(void) {
     if (!g_videoURL) return;
@@ -327,6 +365,53 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
 %end // VCamHooks group
 
 // ============================================================================
+// MARK: - 拍照 / 录像 输出 hook
+// ============================================================================
+
+%group VCamCaptureHooks
+
+// 拍照：任何拿 AVCapturePhoto 字节的 App（相机、微信、抖音、网页上传）都走这里
+%hook AVCapturePhoto
+
+- (NSData *)fileDataRepresentation {
+    if (g_vcamEnabled) {
+        NSData *fake = vcamCaptureJPEG();
+        if (fake.length > 0) return fake;
+    }
+    return %orig;
+}
+
+%end
+
+// 录像：AVCaptureMovieFileOutput 落盘后把文件换成我们的视频
+%hook AVCaptureMovieFileOutput
+
+- (void)startRecordingToOutputFileURL:(NSURL *)url recordingDelegate:(id<AVCaptureFileOutputRecordingDelegate>)delegate {
+    if (g_vcamEnabled && url.isFileURL) {
+        objc_setAssociatedObject(self, kVCamMovieURLKey, url, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        NSLog(@"[VCam] recording -> %@", url.lastPathComponent);
+    }
+    %orig;
+}
+
+- (void)stopRecording {
+    %orig;
+    if (!g_vcamEnabled) return;
+    NSURL *url = objc_getAssociatedObject(self, kVCamMovieURLKey);
+    if (!url.isFileURL) return;
+    NSString *path = url.path;
+    // 等 capture 把文件收尾（delegate 回调 + moov 写完）再覆盖，1.2s 是实测折中值
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        vcamReplaceMovieAtPath(path);
+    });
+}
+
+%end
+
+%end // VCamCaptureHooks group
+
+// ============================================================================
 // MARK: - Constructor
 // ============================================================================
 
@@ -344,6 +429,7 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
         }
         
         %init(VCamHooks);
+        %init(VCamCaptureHooks);
         vcamLoadGlobalConfig();
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), 
