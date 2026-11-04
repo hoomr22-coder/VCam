@@ -364,8 +364,8 @@ static void vcamStartWatchdog(void) {
 
 
 static void setupFloatButton(void);
-static void handlePanGesture(UIPanGestureRecognizer *gesture);
-static void handleTapGesture(UITapGestureRecognizer *gesture);
+static void handlePanGesture(id target, SEL cmd, UIPanGestureRecognizer *gesture);
+static void handleTapGesture(id target, SEL cmd, UITapGestureRecognizer *gesture);
 
 static void setupFloatButton() {
     if (g_floatButton) return;
@@ -412,7 +412,10 @@ static void setupFloatButton() {
                     (IMP)handleTapGesture, "v@:@");
 }
 
-static void handlePanGesture(UIPanGestureRecognizer *gesture) {
+// 注意签名：class_addMethod 装上来的 IMP 是按 (id self, SEL _cmd, id arg) 调用的。
+// 只写一个参数 = 把 self(按钮) 当成手势对象，随后给 UIButton 发 -view 直接
+// unrecognized selector 崩溃（1.0.16 自带相机点图标闪退就是这么来的）。
+static void handlePanGesture(id target, SEL cmd, UIPanGestureRecognizer *gesture) {
     UIView *btn = gesture.view;
     CGPoint translation = [gesture translationInView:btn.superview];
     btn.center = CGPointMake(btn.center.x + translation.x, btn.center.y + translation.y);
@@ -565,7 +568,7 @@ static void vcamShowMenu(UIView *sourceView) {
     [topVC presentViewController:alert animated:YES completion:nil];
 }
 
-static void handleTapGesture(UITapGestureRecognizer *gesture) {
+static void handleTapGesture(id target, SEL cmd, UITapGestureRecognizer *gesture) {
     vcamShowMenu(gesture.view);
 }
 
