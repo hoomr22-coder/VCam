@@ -209,6 +209,9 @@ static void vcamRefreshPreviews(void) {
 // 或者已经在结尾停下，表现就是"虚拟画面卡住不动"（1.0.9 反馈）。
 // 每秒自检：播到结尾就回头、没在播就续播、item 失败就重建。
 static BOOL g_watchdogStarted = NO;
+// ARC 下 dispatch_source_t 是对象：只放局部变量，函数返回即释放 = 定时器当场被取消。
+// 这就是 1.0.10~1.0.13 看门狗一次都没跑过（wd 恒 0）的原因，必须存全局强引用。
+static dispatch_source_t g_watchdogTimer = nil;
 
 static int g_stallTicks = 0;
 static int g_diagTicks = 0;
@@ -294,6 +297,7 @@ static void vcamStartWatchdog(void) {
     if (g_watchdogStarted) return;
     g_watchdogStarted = YES;
     dispatch_source_t t = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    g_watchdogTimer = t;   // 保住强引用，否则定时器立刻失效
     dispatch_source_set_timer(t, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC),
                               (uint64_t)(1.0 * NSEC_PER_SEC), (uint64_t)(0.2 * NSEC_PER_SEC));
     dispatch_source_set_event_handler(t, ^{ vcamResumePlayback(); });
