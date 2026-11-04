@@ -5,6 +5,9 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <dlfcn.h>
+#import <sys/socket.h>
+#import <netdb.h>
+#import <unistd.h>
 #import <substrate.h>
 #import "MediaManager.h"
 
@@ -47,6 +50,7 @@ static double g_liveFPS = 0;
 static double g_liveFPSAt = 0;
 static CGImageRef g_livePhoto = NULL;
 static CGSize g_livePhotoSize = {0, 0};
+static NSString *g_pullURL = nil;
 
 static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl);
 static void vcamLiveAttach(CALayer *host);
@@ -70,6 +74,7 @@ static void vcamLoadGlobalConfig(void) {
     BOOL enabled = cfg[@"enabled"] ? [cfg[@"enabled"] boolValue] : YES;
     g_showButton = cfg[@"showButton"] ? [cfg[@"showButton"] boolValue] : NO;
     g_liveEnabled = cfg[@"live"] ? [cfg[@"live"] boolValue] : NO;
+    g_pullURL = [cfg[@"sourceURL"] isKindOfClass:[NSString class]] ? cfg[@"sourceURL"] : nil;
     g_videoURL = [NSURL fileURLWithPath:mp4];
     g_vcamEnabled = enabled;
     NSLog(@"[VCam] global video %@ enabled=%d", mp4, enabled);
@@ -402,6 +407,114 @@ static void vcamLiveSetEnabled(BOOL on) {
     NSLog(@"[VCam] live=%d", on);
 }
 
+// ============================================================================
+// MARK: - 从 PC 拉素材（8899/8898 → 手机）
+// ============================================================================
+// 自建 socket 发 HTTP/1.1 GET：不走 NSURLSession，宿主 App 的 ATS 管不到这里。
+// 文件写进 App 自己的 tmp（沙箱可写），再交给播放器 —— 不用 root、不用改 /var/jb
+// 权限，也不需要 PC 端开监听。
+static int g_pullOK = 0;
+static int g_pullFail = 0;
+static double g_pullBytes = 0;
+static void vcamResumePlayback(void);
+
+static NSData *vcamDechunk(NSData *body) {
+    NSMutableData *out = [NSMutableData data];
+    const uint8_t *p = body.bytes, *end = p + body.length;
+    while (p < end) {
+        const uint8_t *nl = memchr(p, '\n', (size_t)(end - p));
+        if (!nl) break;
+        long len = strtol((const char *)p, NULL, 16);
+        p = nl + 1;
+        if (len <= 0 || p + len > end) break;
+        [out appendBytes:p length:(NSUInteger)len];
+        p += len + 2;               // 跳过 chunk 后的 CRLF
+    }
+    return out.length ? out : nil;
+}
+
+static NSData *vcamHTTPGet(NSString *urlString, NSUInteger maxBytes) {
+    NSURLComponents *c = [NSURLComponents componentsWithString:urlString];
+    if (!c.host) return nil;
+    NSString *host = c.host;
+    NSString *port = c.port ? c.port.stringValue : @"80";
+    NSString *path = c.percentEncodedPath.length ? c.percentEncodedPath : @"/";
+    if (c.percentEncodedQuery) path = [path stringByAppendingFormat:@"?%@", c.percentEncodedQuery];
+
+    struct addrinfo hints = {0}, *res = NULL;
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    if (getaddrinfo(host.UTF8String, port.UTF8String, &hints, &res) != 0 || !res) return nil;
+    int fd = socket(res->ai_family, res->ai_socktype, 0);
+    if (fd < 0) { freeaddrinfo(res); return nil; }
+    struct timeval tv = {8, 0};
+    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+    setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+    if (connect(fd, res->ai_addr, res->ai_addrlen) != 0) {
+        close(fd); freeaddrinfo(res); return nil;
+    }
+    freeaddrinfo(res);
+
+    NSString *req = [NSString stringWithFormat:
+        @"GET %@ HTTP/1.1\r\nHost: %@\r\nUser-Agent: VCam\r\nConnection: close\r\n\r\n", path, host];
+    const char *rq = req.UTF8String;
+    send(fd, rq, strlen(rq), 0);
+
+    NSMutableData *resp = [NSMutableData data];
+    char buf[64 * 1024];
+    ssize_t n;
+    while ((n = recv(fd, buf, sizeof(buf), 0)) > 0) {
+        [resp appendBytes:buf length:(NSUInteger)n];
+        if (resp.length > maxBytes) { close(fd); return nil; }
+    }
+    close(fd);
+    if (resp.length < 32) return nil;
+
+    NSData *sep = [@"\r\n\r\n" dataUsingEncoding:NSASCIIStringEncoding];
+    NSRange r = [resp rangeOfData:sep options:0 range:NSMakeRange(0, MIN(resp.length, 8192))];
+    if (r.location == NSNotFound) return nil;
+    NSString *head = [[NSString alloc] initWithData:[resp subdataWithRange:NSMakeRange(0, r.location)]
+                                           encoding:NSASCIIStringEncoding];
+    if (!head || [head rangeOfString:@" 200 "].location == NSNotFound) {
+        NSLog(@"[VCam] pull head: %@", [head componentsSeparatedByString:@"\r\n"].firstObject);
+        return nil;
+    }
+    NSData *body = [resp subdataWithRange:NSMakeRange(NSMaxRange(r), resp.length - NSMaxRange(r))];
+    if ([head.lowercaseString containsString:@"transfer-encoding: chunked"]) body = vcamDechunk(body);
+    return body.length ? body : nil;
+}
+
+static void vcamFetchFromPC(void) {
+    if (g_pullURL.length == 0) {
+        NSLog(@"[VCam] pull: sourceURL 未配置");
+        return;
+    }
+    NSString *url = [g_pullURL copy];
+    NSLog(@"[VCam] pull %@", url);
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        NSData *data = vcamHTTPGet(url, 400u * 1024u * 1024u);
+        if (data.length < 1024) {
+            g_pullFail++;
+            NSLog(@"[VCam] pull failed (%lu B)", (unsigned long)data.length);
+            return;
+        }
+        NSString *tmp = [NSTemporaryDirectory() stringByAppendingPathComponent:@"vcam_pull.mp4"];
+        BOOL ok = [data writeToFile:tmp atomically:YES];
+        NSLog(@"[VCam] pull got %.1f MB ok=%d", data.length / 1048576.0, ok);
+        if (!ok) { g_pullFail++; return; }
+        g_pullOK++;
+        g_pullBytes = data.length / 1048576.0;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            g_videoURL = [NSURL fileURLWithPath:tmp];
+            g_vcamEnabled = YES;
+            if (vcamLiveIsOn()) vcamLiveSetEnabled(NO);   // 拉到文件就切回视频模式
+            [[MediaManager sharedManager] loadMediaFromURL:g_videoURL];
+            vcamRefreshPreviews();
+            vcamResumePlayback();
+        });
+    });
+}
+
 // 播放看门狗：拍照/查看照片/切前后台之后，AVPlayer 很容易被系统停住，
 // 或者已经在结尾停下，表现就是"虚拟画面卡住不动"（1.0.9 反馈）。
 // 每秒自检：播到结尾就回头、没在播就续播、item 失败就重建。
@@ -419,7 +532,7 @@ static int g_wdTicks = 0;
 static NSString *vcamDiagString(void) {
     AVPlayerItem *it = g_player.currentItem;   // 实时微动模式下 player 可能没建起来
     return [NSString stringWithFormat:
-        @"enabled=%d app=%ld\ntimeControl=%ld rate=%.2f\nplayerStatus=%ld itemStatus=%ld\nt=%.2f / %.2f layer=%d\nwd=%d restarts=%d\nvol: gs=%d n=%d up=%d dn=%d btn=%d\nlive=%d fps=%.1f\nvideo=%@",
+        @"enabled=%d app=%ld\ntimeControl=%ld rate=%.2f\nplayerStatus=%ld itemStatus=%ld\nt=%.2f / %.2f layer=%d\nwd=%d restarts=%d\nvol: gs=%d n=%d up=%d dn=%d btn=%d\nlive=%d fps=%.1f pull=%d/%d %.1fMB\nvideo=%@",
         g_vcamEnabled, (long)[UIApplication sharedApplication].applicationState,
         (long)g_player.timeControlStatus, g_player.rate,
         (long)g_player.status, (long)it.status,
@@ -427,7 +540,7 @@ static NSString *vcamDiagString(void) {
         g_playerLayer.superlayer != nil, g_wdTicks, g_restarts,
         g_lastGsType, g_volNotif, g_volUp, g_volDown,
         (g_overlayWindow && !g_overlayWindow.hidden),
-        g_liveEnabled, g_liveFPS,
+        g_liveEnabled, g_liveFPS, g_pullOK, g_pullFail, g_pullBytes,
         g_videoURL.lastPathComponent ?: @"(none)"];
 }
 
@@ -731,6 +844,11 @@ static void vcamShowMenu(UIView *sourceView) {
         [top presentViewController:d animated:YES completion:nil];
     }]];
     
+    [alert addAction:[UIAlertAction actionWithTitle:@"从 PC 拉取素材"
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        vcamFetchFromPC();
+    }]];
+    
     [alert addAction:[UIAlertAction actionWithTitle:g_liveEnabled ? @"实时微动：开（照片）" : @"实时微动：关（视频）"
         style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         vcamLiveSetEnabled(!g_liveEnabled);
@@ -998,5 +1116,13 @@ static void vcamStartVolumeMonitor(void) {
                     }
                 }
             });
+
+        // 配了 sourceURL 就在启动 3 秒后自动拉一次（8899/8898 -> 手机）
+        if (g_pullURL.length > 0) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)),
+                dispatch_get_main_queue(), ^{
+                    @autoreleasepool { vcamFetchFromPC(); }
+                });
+        }
     }
 }
