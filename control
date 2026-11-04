@@ -1,6 +1,6 @@
 Package: com.yourname.vcam
 Name: VCam
-Version: 1.0.19
+Version: 1.0.20
 Architecture: iphoneos-arm
 Description: 虚拟相机；音量键唤起；按已装相机 App 自动生成作用域
 Maintainer: Your Name
