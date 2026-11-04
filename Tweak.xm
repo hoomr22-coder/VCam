@@ -36,7 +36,23 @@ static AVPlayerLayer *g_playerLayer = nil;
 static NSURL *g_videoURL = nil;
 static NSHashTable *g_previewLayers = nil;
 
+// 实时微动（照片 + Core Animation 变换）的全局状态，声明放前面：config 读取要用
+static BOOL  g_liveEnabled = NO;
+static CALayer *g_liveLayer = nil;
+static CADisplayLink *g_liveLink = nil;
+static NSObject *g_liveDriver = nil;
+static double g_liveT0 = 0;
+static int    g_liveFrames = 0;
+static double g_liveFPS = 0;
+static double g_liveFPSAt = 0;
+static CGImageRef g_livePhoto = NULL;
+static CGSize g_livePhotoSize = {0, 0};
+
 static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl);
+static void vcamLiveAttach(CALayer *host);
+static void vcamLiveStop(void);
+static BOOL vcamLiveIsOn(void);
+static CGImageRef vcamLiveFrameCGImage(void);
 
 // 全局素材：/var/jb/Library/Application Support/VCam/video.mp4
 // 打包时塞进 deb，所有注入了插件的 App 打开即用同一段视频，不必逐个选片。
@@ -53,6 +69,7 @@ static void vcamLoadGlobalConfig(void) {
         [kVCamGlobalDir stringByAppendingPathComponent:@"config.plist"]];
     BOOL enabled = cfg[@"enabled"] ? [cfg[@"enabled"] boolValue] : YES;
     g_showButton = cfg[@"showButton"] ? [cfg[@"showButton"] boolValue] : NO;
+    g_liveEnabled = cfg[@"live"] ? [cfg[@"live"] boolValue] : NO;
     g_videoURL = [NSURL fileURLWithPath:mp4];
     g_vcamEnabled = enabled;
     NSLog(@"[VCam] global video %@ enabled=%d", mp4, enabled);
@@ -76,6 +93,10 @@ static NSMutableSet *g_photoPending = nil;
 static dispatch_queue_t g_photoQueue = nil;
 
 static CGImageRef vcamFrameCGImage(void) {
+    if (vcamLiveIsOn()) {
+        CGImageRef live = vcamLiveFrameCGImage();
+        if (live) return live;      // 实时微动：拍照取当前这一帧的形变状态
+    }
     if (!g_videoURL) return NULL;
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:g_videoURL options:nil];
     double dur = CMTimeGetSeconds(asset.duration);
@@ -197,8 +218,18 @@ static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl) {
         if (g_playerLayer && g_playerLayer.superlayer == (CALayer *)pl) {
             [g_playerLayer removeFromSuperlayer];
         }
+        vcamLiveStop();
         return;
     }
+    if (vcamLiveIsOn()) {
+        vcamLiveAttach((CALayer *)pl);
+        if (g_playerLayer && g_playerLayer.superlayer == (CALayer *)pl) {
+            [g_playerLayer removeFromSuperlayer];
+        }
+        [g_player pause];
+        return;
+    }
+    vcamLiveStop();
     vcamEnsurePlayer();
     if (!g_playerLayer) return;
     if (g_playerLayer.superlayer != (CALayer *)pl) {
@@ -223,6 +254,154 @@ static void vcamRefreshPreviews(void) {
     }
 }
 
+// ============================================================================
+// MARK: - 实时微动（照片 + Core Animation 变换，无神经网络、无解码）
+// ============================================================================
+// 8899 的 idle 本来就是「静止照片 + 合成运动轨迹」（呼吸/漂移/手抖/微摆），
+// 这里把同一套轨迹直接打在 CALayer 上，由 GPU 合成，不产生像素拷贝。
+// 局限：纯仿射，没有 3D 视角合成 —— 做不了明显转头，那是 LivePortrait 的活。
+static CGImageRef vcamLivePhotoImage(void) {
+    if (g_livePhoto) return g_livePhoto;
+    NSString *p = [kVCamGlobalDir stringByAppendingPathComponent:@"photo.jpg"];
+    UIImage *img = [UIImage imageWithContentsOfFile:p];
+    if (!img) img = [UIImage imageWithContentsOfFile:[kVCamGlobalDir stringByAppendingPathComponent:@"photo.png"]];
+    if (img.CGImage) {
+        g_livePhoto = CGImageRetain(img.CGImage);
+        g_livePhotoSize = CGSizeMake(CGImageGetWidth(g_livePhoto), CGImageGetHeight(g_livePhoto));
+        NSLog(@"[VCam] live photo %@ %.0fx%.0f", p.lastPathComponent, g_livePhotoSize.width, g_livePhotoSize.height);
+        return g_livePhoto;
+    }
+    // 没有 photo.jpg 就退回视频首帧，保证开箱能看
+    if (g_videoURL) {
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:g_videoURL options:nil];
+        AVAssetImageGenerator *gen = [AVAssetImageGenerator assetImageGeneratorWithAsset:asset];
+        gen.appliesPreferredTrackTransform = YES;
+        gen.requestedTimeToleranceBefore = kCMTimeZero;
+        gen.requestedTimeToleranceAfter = kCMTimeZero;
+        CGImageRef cg = [gen copyCGImageAtTime:kCMTimeZero actualTime:NULL error:NULL];
+        if (cg) {
+            g_livePhoto = cg;
+            g_livePhotoSize = CGSizeMake(CGImageGetWidth(cg), CGImageGetHeight(cg));
+            NSLog(@"[VCam] live photo = video first frame %.0fx%.0f", g_livePhotoSize.width, g_livePhotoSize.height);
+            return g_livePhoto;
+        }
+    }
+    return NULL;
+}
+
+// 当前时刻的运动参数（与 studio.py 的 idle 同构：4s 呼吸、8s 漂移、56 周期手抖）
+typedef struct { double sx, sy, rot, scale; } VCamMotion;
+static VCamMotion vcamMotionAt(double t) {
+    const double tw = 2.0 * M_PI;
+    VCamMotion m;
+    m.scale = 1.0 + 0.006 * sin(tw * t / 4.0);
+    m.sx = 2.4 * sin(tw * t / 8.0) + 1.1 * sin(tw * 2.0 * t / 8.0)
+         + 0.45 * sin(tw * 56.0 * t / 8.0);
+    m.sy = 1.6 * sin(tw * t / 6.0 + 1.2) + 0.35 * sin(tw * 47.0 * t / 8.0);
+    m.rot = 0.25 * sin(tw * t / 9.0);
+    return m;
+}
+
+// 把当前运动状态烘成一张 CGImage，供拍照替换使用（背景队列调用，+1 引用）
+static CGImageRef vcamLiveFrameCGImage(void) {
+    CGImageRef photo = vcamLivePhotoImage();
+    if (!photo) return NULL;
+    double t = g_liveT0 > 0 ? CACurrentMediaTime() - g_liveT0 : 0;
+    VCamMotion m = vcamMotionAt(t);
+    size_t W = (size_t)g_livePhotoSize.width, H = (size_t)g_livePhotoSize.height;
+    if (W == 0 || H == 0) return NULL;
+    CGColorSpaceRef cs = CGColorSpaceCreateDeviceRGB();
+    CGContextRef ctx = CGBitmapContextCreate(NULL, W, H, 8, 0, cs, kCGImageAlphaNoneSkipLast);
+    CGColorSpaceRelease(cs);
+    if (!ctx) return NULL;
+    CGContextTranslateCTM(ctx, W / 2.0 + m.sx, H / 2.0 + m.sy);
+    CGContextRotateCTM(ctx, m.rot * M_PI / 180.0);
+    CGContextScaleCTM(ctx, m.scale, m.scale);
+    CGContextDrawImage(ctx, CGRectMake(-W / 2.0, -H / 2.0, W, H), photo);
+    CGImageRef out = CGBitmapContextCreateImage(ctx);
+    CGContextRelease(ctx);
+    return out;
+}
+
+static void vcamLiveTick(void) {
+    if (!g_liveEnabled || !g_liveLayer || !g_liveLayer.superlayer) return;
+    double now = CACurrentMediaTime();
+    if (g_liveT0 <= 0) g_liveT0 = now;
+    VCamMotion m = vcamMotionAt(now - g_liveT0);
+    CGFloat rad = (CGFloat)(m.rot * M_PI / 180.0);
+    CATransform3D tr = CATransform3DMakeScale((CGFloat)m.scale, (CGFloat)m.scale, 1.0);
+    tr = CATransform3DRotate(tr, rad, 0, 0, 1);
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    g_liveLayer.transform = tr;
+    g_liveLayer.position = CGPointMake(g_liveLayer.superlayer.bounds.size.width / 2.0 + m.sx,
+                                       g_liveLayer.superlayer.bounds.size.height / 2.0 + m.sy);
+    [CATransaction commit];
+    g_liveFrames++;
+    if (g_liveFPSAt <= 0) g_liveFPSAt = now;
+    if (now - g_liveFPSAt >= 1.0) {
+        g_liveFPS = g_liveFrames / (now - g_liveFPSAt);
+        g_liveFrames = 0;
+        g_liveFPSAt = now;
+    }
+}
+
+@interface VCamLiveDriver : NSObject
+@end
+
+@implementation VCamLiveDriver
+- (void)tick:(CADisplayLink *)link { vcamLiveTick(); }
+@end
+
+static void vcamLiveAttach(CALayer *host) {
+    if (!host) return;
+    CGImageRef photo = vcamLivePhotoImage();
+    if (!photo) return;
+    if (!g_liveLayer) {
+        g_liveLayer = [CALayer layer];
+        g_liveLayer.contentsGravity = kCAGravityResizeAspectFill;
+        g_liveLayer.masksToBounds = YES;
+        g_liveLayer.contents = (__bridge id)photo;
+    }
+    // 放大 8%，保证旋转/平移时不会露出边缘
+    CGRect b = host.bounds;
+    CGFloat w = b.size.width * 1.08, h = b.size.height * 1.08;
+    g_liveLayer.bounds = CGRectMake(0, 0, w, h);
+    g_liveLayer.position = CGPointMake(CGRectGetMidX(b), CGRectGetMidY(b));
+    if (g_liveLayer.superlayer != host) {
+        [g_liveLayer removeFromSuperlayer];
+        [host addSublayer:g_liveLayer];
+    }
+    if (!g_liveLink) {
+        if (!g_liveDriver) g_liveDriver = [[VCamLiveDriver alloc] init];
+        g_liveLink = [CADisplayLink displayLinkWithTarget:g_liveDriver selector:@selector(tick:)];
+        g_liveLink.preferredFramesPerSecond = 30;
+        [g_liveLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+        g_liveT0 = CACurrentMediaTime();
+        NSLog(@"[VCam] live warp started (photo %.0fx%.0f)", g_livePhotoSize.width, g_livePhotoSize.height);
+    }
+}
+
+static void vcamLiveStop(void) {
+    if (g_liveLink) {
+        [g_liveLink invalidate];
+        g_liveLink = nil;
+    }
+    if (g_liveLayer) [g_liveLayer removeFromSuperlayer];
+    g_liveFPS = 0;
+}
+
+static BOOL vcamLiveIsOn(void) { return g_liveEnabled; }
+
+static void vcamLiveSetEnabled(BOOL on) {
+    g_liveEnabled = on;
+    [[NSUserDefaults standardUserDefaults] setBool:on forKey:@"VCamLive"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    if (!on) vcamLiveStop();
+    vcamRefreshPreviews();
+    NSLog(@"[VCam] live=%d", on);
+}
+
 // 播放看门狗：拍照/查看照片/切前后台之后，AVPlayer 很容易被系统停住，
 // 或者已经在结尾停下，表现就是"虚拟画面卡住不动"（1.0.9 反馈）。
 // 每秒自检：播到结尾就回头、没在播就续播、item 失败就重建。
@@ -238,10 +417,9 @@ static int g_wdTicks = 0;
 
 // 屏幕上的自检信息（点 📷 → 状态），不依赖 syslog
 static NSString *vcamDiagString(void) {
-    if (!g_player) return @"player = nil";
-    AVPlayerItem *it = g_player.currentItem;
+    AVPlayerItem *it = g_player.currentItem;   // 实时微动模式下 player 可能没建起来
     return [NSString stringWithFormat:
-        @"enabled=%d app=%ld\ntimeControl=%ld rate=%.2f\nplayerStatus=%ld itemStatus=%ld\nt=%.2f / %.2f layer=%d\nwd=%d restarts=%d\nvol: gs=%d n=%d up=%d dn=%d btn=%d\nvideo=%@",
+        @"enabled=%d app=%ld\ntimeControl=%ld rate=%.2f\nplayerStatus=%ld itemStatus=%ld\nt=%.2f / %.2f layer=%d\nwd=%d restarts=%d\nvol: gs=%d n=%d up=%d dn=%d btn=%d\nlive=%d fps=%.1f\nvideo=%@",
         g_vcamEnabled, (long)[UIApplication sharedApplication].applicationState,
         (long)g_player.timeControlStatus, g_player.rate,
         (long)g_player.status, (long)it.status,
@@ -249,6 +427,7 @@ static NSString *vcamDiagString(void) {
         g_playerLayer.superlayer != nil, g_wdTicks, g_restarts,
         g_lastGsType, g_volNotif, g_volUp, g_volDown,
         (g_overlayWindow && !g_overlayWindow.hidden),
+        g_liveEnabled, g_liveFPS,
         g_videoURL.lastPathComponent ?: @"(none)"];
 }
 
@@ -284,6 +463,7 @@ static void vcamRebuildPlayer(void) {
 
 static void vcamResumePlayback(void) {
     if (!g_vcamEnabled || !g_videoURL) return;
+    if (vcamLiveIsOn()) { g_wdTicks++; return; }   // 实时微动不播文件，不需要看门狗
     g_wdTicks++;
     vcamEnsurePlayer();
     if (!g_player || g_player.status == AVPlayerStatusFailed) { vcamRebuildPlayer(); return; }
@@ -551,6 +731,11 @@ static void vcamShowMenu(UIView *sourceView) {
         [top presentViewController:d animated:YES completion:nil];
     }]];
     
+    [alert addAction:[UIAlertAction actionWithTitle:g_liveEnabled ? @"实时微动：开（照片）" : @"实时微动：关（视频）"
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        vcamLiveSetEnabled(!g_liveEnabled);
+    }]];
+    
     [alert addAction:[UIAlertAction actionWithTitle:(g_overlayWindow && !g_overlayWindow.hidden) ? @"隐藏悬浮球" : @"显示悬浮球"
         style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         vcamSetButtonVisible(!(g_overlayWindow && !g_overlayWindow.hidden));
@@ -788,6 +973,9 @@ static void vcamStartVolumeMonitor(void) {
         %init(VCamCaptureHooks);
         %init(VCamVolumeHooks);
         vcamLoadGlobalConfig();
+        // 用户的开关优先于 deb 里的默认值（按 App 记忆）
+        id livePref = [[NSUserDefaults standardUserDefaults] objectForKey:@"VCamLive"];
+        if (livePref) g_liveEnabled = [livePref boolValue];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), 
             dispatch_get_main_queue(), ^{
