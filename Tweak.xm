@@ -417,6 +417,9 @@ static int g_pullOK = 0;
 static int g_pullFail = 0;
 static double g_pullBytes = 0;
 static void vcamResumePlayback(void);
+static UIViewController *findTopViewController(void);
+static BOOL vcamUseLocalClip(BOOL force);
+static void vcamToast(NSString *msg);
 
 static NSData *vcamDechunk(NSData *body) {
     NSMutableData *out = [NSMutableData data];
@@ -496,6 +499,9 @@ static void vcamFetchFromPC(void) {
         if (data.length < 1024) {
             g_pullFail++;
             NSLog(@"[VCam] pull failed (%lu B)", (unsigned long)data.length);
+            BOOL local = vcamUseLocalClip(YES);      // 网络不通就走 DCIM 通道
+            vcamToast(local ? @"从 PC 拉取失败，已改用 DCIM 里的片段"
+                            : @"从 PC 拉取失败，DCIM 里也没有片段");
             return;
         }
         NSString *tmp = [NSTemporaryDirectory() stringByAppendingPathComponent:@"vcam_pull.mp4"];
@@ -504,6 +510,7 @@ static void vcamFetchFromPC(void) {
         if (!ok) { g_pullFail++; return; }
         g_pullOK++;
         g_pullBytes = data.length / 1048576.0;
+        vcamToast([NSString stringWithFormat:@"已从 PC 拉取 %.0f KB", data.length / 1024.0]);
         dispatch_async(dispatch_get_main_queue(), ^{
             g_videoURL = [NSURL fileURLWithPath:tmp];
             g_vcamEnabled = YES;
@@ -513,6 +520,74 @@ static void vcamFetchFromPC(void) {
             vcamResumePlayback();
         });
     });
+}
+
+// ============================================================================
+// MARK: - 本地片段（DCIM）——不需要网络的通道
+// ============================================================================
+// Camera.app 的沙箱允许读写 /var/mobile/Media/DCIM（它自己就把照片存那儿），
+// 所以 PC 用 AFC 把片段推进 DCIM 后，进程里直接读得到 —— 不依赖局域网、
+// 不依赖 App 有没有网络权限（后者恰恰是系统相机最可能没有的）。
+static double g_videoMTime = 0;
+
+static void vcamToast(NSString *msg) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController *top = findTopViewController();
+        if (!top) { NSLog(@"[VCam] toast(no vc): %@", msg); return; }
+        UIAlertController *a = [UIAlertController alertControllerWithTitle:@"VCam"
+                                                                  message:msg
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+        [a addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
+        [top presentViewController:a animated:YES completion:nil];
+    });
+}
+
+static NSString *vcamNewestDCIMClip(double *mtimeOut) {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *root = @"/var/mobile/Media/DCIM";
+    NSString *best = nil;
+    double bestT = 0;
+    NSMutableArray *dirs = [NSMutableArray array];
+    for (NSString *d in [fm contentsOfDirectoryAtPath:root error:NULL]) {
+        [dirs addObject:[root stringByAppendingPathComponent:d]];
+    }
+    NSMutableArray *files = [NSMutableArray arrayWithArray:dirs];
+    for (NSString *d in dirs) {
+        BOOL isDir = NO;
+        if ([fm fileExistsAtPath:d isDirectory:&isDir] && isDir) {
+            for (NSString *f in [fm contentsOfDirectoryAtPath:d error:NULL]) {
+                [files addObject:[d stringByAppendingPathComponent:f]];
+            }
+        }
+    }
+    for (NSString *p in files) {
+        NSString *ext = p.pathExtension.lowercaseString;
+        if (!([ext isEqualToString:@"mp4"] || [ext isEqualToString:@"mov"])) continue;
+        NSDictionary *a = [fm attributesOfItemAtPath:p error:NULL];
+        double t = [a[NSFileModificationDate] timeIntervalSince1970];
+        if (t > bestT) { bestT = t; best = p; }
+    }
+    if (mtimeOut) *mtimeOut = bestT;
+    return best;
+}
+
+// 有比当前更新的片段就换上去。force=YES 时无论新旧都载入。
+static BOOL vcamUseLocalClip(BOOL force) {
+    double t = 0;
+    NSString *p = vcamNewestDCIMClip(&t);
+    if (!p) return NO;
+    if (!force && t <= g_videoMTime) return NO;
+    g_videoMTime = t;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        g_videoURL = [NSURL fileURLWithPath:p];
+        g_vcamEnabled = YES;
+        if (vcamLiveIsOn()) vcamLiveSetEnabled(NO);
+        [[MediaManager sharedManager] loadMediaFromURL:g_videoURL];
+        vcamRefreshPreviews();
+        vcamResumePlayback();
+        NSLog(@"[VCam] local clip %@", p.lastPathComponent);
+    });
+    return YES;
 }
 
 // 播放看门狗：拍照/查看照片/切前后台之后，AVPlayer 很容易被系统停住，
@@ -849,6 +924,11 @@ static void vcamShowMenu(UIView *sourceView) {
         vcamFetchFromPC();
     }]];
     
+    [alert addAction:[UIAlertAction actionWithTitle:@"载入 DCIM 最新片段"
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        if (!vcamUseLocalClip(YES)) vcamToast(@"DCIM 里没有 mp4/mov");
+    }]];
+    
     [alert addAction:[UIAlertAction actionWithTitle:g_liveEnabled ? @"实时微动：开（照片）" : @"实时微动：关（视频）"
         style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         vcamLiveSetEnabled(!g_liveEnabled);
@@ -1101,6 +1181,7 @@ static void vcamStartVolumeMonitor(void) {
                     if (vcamButtonPref()) setupFloatButton();
                     vcamStartVolumeMonitor();
                     vcamStartWatchdog();
+                    vcamUseLocalClip(NO);      // PC 推进 DCIM 的片段优先于内置 video.mp4
                 }
             });
         
