@@ -184,6 +184,10 @@ static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl) {
     vcamEnsurePlayer();
     if (!g_playerLayer) return;
     if (g_playerLayer.superlayer != (CALayer *)pl) {
+        // 换挂载点时把 player 重新绑定一次：否则图层搬过去后可能停在旧画面上
+        [g_playerLayer removeFromSuperlayer];
+        g_playerLayer.player = nil;
+        g_playerLayer.player = g_player;
         [(CALayer *)pl addSublayer:g_playerLayer];
     }
     [CATransaction begin];
@@ -206,6 +210,29 @@ static void vcamRefreshPreviews(void) {
 // 每秒自检：播到结尾就回头、没在播就续播、item 失败就重建。
 static BOOL g_watchdogStarted = NO;
 
+static int g_stallTicks = 0;
+static int g_diagTicks = 0;
+
+// 把 item 整个换掉并从头播：比 seek 更狠，能解开 "rate=1 但一帧不动" 的僵死
+static void vcamHardRestart(void) {
+    if (!g_videoURL || !g_player) return;
+    AVPlayerItem *fresh = [AVPlayerItem playerItemWithURL:g_videoURL];
+    __weak AVPlayer *weakPlayer = g_player;
+    [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification
+        object:fresh queue:[NSOperationQueue mainQueue]
+        usingBlock:^(NSNotification *note) {
+            [weakPlayer seekToTime:kCMTimeZero];
+            [weakPlayer play];
+        }];
+    [g_player replaceCurrentItemWithPlayerItem:fresh];
+    if (g_playerLayer) {
+        g_playerLayer.player = nil;
+        g_playerLayer.player = g_player;
+    }
+    [g_player play];
+    NSLog(@"[VCam] hard restart");
+}
+
 static void vcamResumePlayback(void) {
     if (!g_vcamEnabled || !g_videoURL) return;
     vcamEnsurePlayer();
@@ -213,17 +240,8 @@ static void vcamResumePlayback(void) {
     AVPlayerItem *item = g_player.currentItem;
     if (!item || item.status == AVPlayerItemStatusFailed) {
         NSLog(@"[VCam] player item failed -> rebuild");
-        AVPlayerItem *fresh = [AVPlayerItem playerItemWithURL:g_videoURL];
-        __weak AVPlayer *weakPlayer = g_player;
-        [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification
-            object:fresh queue:[NSOperationQueue mainQueue]
-            usingBlock:^(NSNotification *note) {
-                [weakPlayer seekToTime:kCMTimeZero];
-                [weakPlayer play];
-            }];
-        [g_player replaceCurrentItemWithPlayerItem:fresh];
-        item = fresh;
-        if (g_playerLayer) g_playerLayer.player = g_player;
+        vcamHardRestart();
+        item = g_player.currentItem;
     }
     double dur = CMTimeGetSeconds(item.duration);
     double cur = CMTimeGetSeconds(g_player.currentTime);
@@ -232,6 +250,22 @@ static void vcamResumePlayback(void) {
     }
     if (g_player.rate == 0.0 && g_player.status != AVPlayerStatusFailed) {
         [g_player play];
+    }
+    // 僵死判定：前台却连续 2 秒不是 playing（rate=1 但 timeControlStatus 卡在 waiting 也算），
+    // 直接换 item 重播。
+    BOOL active = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
+    if (active && g_player.timeControlStatus != AVPlayerTimeControlStatusPlaying) {
+        if (++g_stallTicks >= 2) {
+            g_stallTicks = 0;
+            vcamHardRestart();
+        }
+    } else {
+        g_stallTicks = 0;
+    }
+    if (++g_diagTicks % 5 == 0) {
+        NSLog(@"[VCam] state tc=%ld rate=%.1f t=%.2f/%.2f item=%ld super=%d",
+              (long)g_player.timeControlStatus, g_player.rate, cur, dur,
+              (long)item.status, g_playerLayer.superlayer != nil);
     }
 }
 
