@@ -4,7 +4,8 @@
 chmod 755 /Library/MobileSubstrate/DynamicLibraries/VCam.dylib
 chmod 644 /Library/MobileSubstrate/DynamicLibraries/VCam.plist
 
-# 重启 SpringBoard 加载插件
+# 重启 SpringBoard 加载插件；顺手把还在跑的相机进程杀掉，否则它仍用旧 dylib
 killall -9 SpringBoard
+killall -9 Camera 2>/dev/null
 
 exit 0
