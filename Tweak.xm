@@ -201,6 +201,57 @@ static void vcamRefreshPreviews(void) {
     }
 }
 
+// 播放看门狗：拍照/查看照片/切前后台之后，AVPlayer 很容易被系统停住，
+// 或者已经在结尾停下，表现就是"虚拟画面卡住不动"（1.0.9 反馈）。
+// 每秒自检：播到结尾就回头、没在播就续播、item 失败就重建。
+static BOOL g_watchdogStarted = NO;
+
+static void vcamResumePlayback(void) {
+    if (!g_vcamEnabled || !g_videoURL) return;
+    vcamEnsurePlayer();
+    if (!g_player) return;
+    AVPlayerItem *item = g_player.currentItem;
+    if (!item || item.status == AVPlayerItemStatusFailed) {
+        NSLog(@"[VCam] player item failed -> rebuild");
+        AVPlayerItem *fresh = [AVPlayerItem playerItemWithURL:g_videoURL];
+        __weak AVPlayer *weakPlayer = g_player;
+        [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification
+            object:fresh queue:[NSOperationQueue mainQueue]
+            usingBlock:^(NSNotification *note) {
+                [weakPlayer seekToTime:kCMTimeZero];
+                [weakPlayer play];
+            }];
+        [g_player replaceCurrentItemWithPlayerItem:fresh];
+        item = fresh;
+        if (g_playerLayer) g_playerLayer.player = g_player;
+    }
+    double dur = CMTimeGetSeconds(item.duration);
+    double cur = CMTimeGetSeconds(g_player.currentTime);
+    if (dur > 0 && cur >= dur - 0.15) {
+        [g_player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
+    }
+    if (g_player.rate == 0.0 && g_player.status != AVPlayerStatusFailed) {
+        [g_player play];
+    }
+}
+
+static void vcamStartWatchdog(void) {
+    if (g_watchdogStarted) return;
+    g_watchdogStarted = YES;
+    dispatch_source_t t = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_main_queue());
+    dispatch_source_set_timer(t, dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_SEC),
+                              (uint64_t)(1.0 * NSEC_PER_SEC), (uint64_t)(0.2 * NSEC_PER_SEC));
+    dispatch_source_set_event_handler(t, ^{ vcamResumePlayback(); });
+    dispatch_resume(t);
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification
+        object:nil queue:[NSOperationQueue mainQueue]
+        usingBlock:^(NSNotification *note) {
+            vcamResumePlayback();
+            vcamRefreshPreviews();
+        }];
+    NSLog(@"[VCam] playback watchdog started");
+}
+
 // ============================================================================
 // MARK: - 悬浮按钮 UI
 // ============================================================================
@@ -337,6 +388,7 @@ static UIViewController *findTopViewController(void) {
     vcamRefreshPreviews();
     g_vcamEnabled = YES;
     [[MediaManager sharedManager] start];
+    vcamResumePlayback();
     if (g_floatButton) {
         g_floatButton.backgroundColor = [UIColor colorWithRed:0.2 green:0.8 blue:0.4 alpha:0.9];
     }
@@ -520,6 +572,7 @@ static void handleTapGesture(UITapGestureRecognizer *gesture) {
             dispatch_get_main_queue(), ^{
                 @autoreleasepool {
                     setupFloatButton();
+                    vcamStartWatchdog();
                 }
             });
     }
