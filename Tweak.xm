@@ -420,7 +420,7 @@ static void vcamResumePlayback(void);
 
 static NSData *vcamDechunk(NSData *body) {
     NSMutableData *out = [NSMutableData data];
-    const uint8_t *p = body.bytes, *end = p + body.length;
+    const uint8_t *p = (const uint8_t *)body.bytes, *end = p + body.length;
     while (p < end) {
         const uint8_t *nl = memchr(p, '\n', (size_t)(end - p));
         if (!nl) break;
