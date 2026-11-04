@@ -212,72 +212,81 @@ static BOOL g_watchdogStarted = NO;
 
 static int g_stallTicks = 0;
 static int g_diagTicks = 0;
+static int g_restarts = 0;
+static int g_wdTicks = 0;
 
 // 屏幕上的自检信息（点 📷 → 状态），不依赖 syslog
 static NSString *vcamDiagString(void) {
     if (!g_player) return @"player = nil";
     AVPlayerItem *it = g_player.currentItem;
     return [NSString stringWithFormat:
-        @"enabled=%d\ntimeControl=%ld rate=%.2f\nt=%.2f / %.2f\nitemStatus=%ld layer=%d\nvideo=%@",
-        g_vcamEnabled, (long)g_player.timeControlStatus, g_player.rate,
+        @"enabled=%d app=%ld\ntimeControl=%ld rate=%.2f\nplayerStatus=%ld itemStatus=%ld\nt=%.2f / %.2f layer=%d\nwd=%d restarts=%d\nvideo=%@",
+        g_vcamEnabled, (long)[UIApplication sharedApplication].applicationState,
+        (long)g_player.timeControlStatus, g_player.rate,
+        (long)g_player.status, (long)it.status,
         CMTimeGetSeconds(g_player.currentTime), CMTimeGetSeconds(it.duration),
-        (long)it.status, g_playerLayer.superlayer != nil,
+        g_playerLayer.superlayer != nil, g_wdTicks, g_restarts,
         g_videoURL.lastPathComponent ?: @"(none)"];
 }
 
-// 把 item 整个换掉并从头播：比 seek 更狠，能解开 "rate=1 但一帧不动" 的僵死
-static void vcamHardRestart(void) {
-    if (!g_videoURL || !g_player) return;
-    AVPlayerItem *fresh = [AVPlayerItem playerItemWithURL:g_videoURL];
-    __weak AVPlayer *weakPlayer = g_player;
+// 整条播放器重建：只换 item 解决不了"玩家本身卡死"（status=failed、或被系统按住 rate 恒 0）。
+static void vcamRebuildPlayer(void) {
+    if (!g_videoURL) return;
+    static CFTimeInterval lastRebuild = 0;
+    CFTimeInterval now = CACurrentMediaTime();
+    if (now - lastRebuild < 5.0) return;   // 防抖：5 秒内最多重建一次，避免画面反复跳
+    lastRebuild = now;
+    AVPlayer *p = [AVPlayer playerWithURL:g_videoURL];
+    p.muted = YES;
+    p.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+    __weak AVPlayer *wp = p;
     [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification
-        object:fresh queue:[NSOperationQueue mainQueue]
+        object:p.currentItem queue:[NSOperationQueue mainQueue]
         usingBlock:^(NSNotification *note) {
-            [weakPlayer seekToTime:kCMTimeZero];
-            [weakPlayer play];
+            [wp seekToTime:kCMTimeZero];
+            [wp playImmediatelyAtRate:1.0];
         }];
-    [g_player replaceCurrentItemWithPlayerItem:fresh];
-    if (g_playerLayer) {
-        g_playerLayer.player = nil;
-        g_playerLayer.player = g_player;
+    g_player = p;
+    if (!g_playerLayer) {
+        g_playerLayer = [AVPlayerLayer playerLayerWithPlayer:p];
+        g_playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        g_playerLayer.backgroundColor = [UIColor blackColor].CGColor;
+    } else {
+        g_playerLayer.player = p;
     }
-    [g_player play];
-    NSLog(@"[VCam] hard restart");
+    [p playImmediatelyAtRate:1.0];
+    g_restarts++;
+    NSLog(@"[VCam] player rebuilt (#%d)", g_restarts);
 }
 
 static void vcamResumePlayback(void) {
     if (!g_vcamEnabled || !g_videoURL) return;
+    g_wdTicks++;
     vcamEnsurePlayer();
-    if (!g_player) return;
+    if (!g_player || g_player.status == AVPlayerStatusFailed) { vcamRebuildPlayer(); return; }
     AVPlayerItem *item = g_player.currentItem;
-    if (!item || item.status == AVPlayerItemStatusFailed) {
-        NSLog(@"[VCam] player item failed -> rebuild");
-        vcamHardRestart();
-        item = g_player.currentItem;
-    }
+    if (!item || item.status == AVPlayerItemStatusFailed) { vcamRebuildPlayer(); return; }
     double dur = CMTimeGetSeconds(item.duration);
     double cur = CMTimeGetSeconds(g_player.currentTime);
     if (dur > 0 && cur >= dur - 0.15) {
         [g_player seekToTime:kCMTimeZero toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
     }
-    if (g_player.rate == 0.0 && g_player.status != AVPlayerStatusFailed) {
-        [g_player play];
+    if (g_player.rate == 0.0) {
+        [g_player playImmediatelyAtRate:1.0];   // 比 play() 硬：不等缓冲直接推
     }
-    // 僵死判定：前台却连续 2 秒不是 playing（rate=1 但 timeControlStatus 卡在 waiting 也算），
-    // 直接换 item 重播。
     BOOL active = [UIApplication sharedApplication].applicationState == UIApplicationStateActive;
     if (active && g_player.timeControlStatus != AVPlayerTimeControlStatusPlaying) {
         if (++g_stallTicks >= 2) {
             g_stallTicks = 0;
-            vcamHardRestart();
+            vcamRebuildPlayer();
         }
     } else {
         g_stallTicks = 0;
     }
     if (++g_diagTicks % 5 == 0) {
-        NSLog(@"[VCam] state tc=%ld rate=%.1f t=%.2f/%.2f item=%ld super=%d",
-              (long)g_player.timeControlStatus, g_player.rate, cur, dur,
-              (long)item.status, g_playerLayer.superlayer != nil);
+        NSLog(@"[VCam] state tc=%ld rate=%.1f t=%.2f/%.2f item=%ld player=%ld wd=%d restarts=%d super=%d",
+              (long)g_player.timeControlStatus, g_player.rate, cur, dur, (long)item.status,
+              (long)g_player.status, g_wdTicks, g_restarts, g_playerLayer.superlayer != nil);
     }
 }
 
