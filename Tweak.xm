@@ -487,6 +487,37 @@ static NSData *vcamHTTPGet(NSString *urlString, NSUInteger maxBytes) {
     return body.length ? body : nil;
 }
 
+// 换片：重建 AVPlayer 和图层绑定。只改 g_videoURL 不动播放器 = 画面不变，
+// 1.0.20 的「拉取没变化」就是这个坑。
+static void vcamSwapVideo(NSURL *url) {
+    if (!url) return;
+    g_videoURL = url;
+    g_vcamEnabled = YES;
+    AVPlayer *p = [AVPlayer playerWithURL:url];
+    p.muted = YES;
+    p.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+    __weak AVPlayer *wp = p;
+    [[NSNotificationCenter defaultCenter] addObserverForName:AVPlayerItemDidPlayToEndTimeNotification
+        object:p.currentItem queue:[NSOperationQueue mainQueue]
+        usingBlock:^(NSNotification *note) {
+            [wp seekToTime:kCMTimeZero];
+            [wp playImmediatelyAtRate:1.0];
+        }];
+    g_player = p;
+    if (!g_playerLayer) {
+        g_playerLayer = [AVPlayerLayer playerLayerWithPlayer:p];
+        g_playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        g_playerLayer.backgroundColor = [UIColor blackColor].CGColor;
+    } else {
+        g_playerLayer.player = p;
+    }
+    [p playImmediatelyAtRate:1.0];
+    g_restarts++;
+    [[MediaManager sharedManager] loadMediaFromURL:url];
+    vcamRefreshPreviews();
+    NSLog(@"[VCam] swapped to %@", url.lastPathComponent);
+}
+
 static void vcamFetchFromPC(void) {
     if (g_pullURL.length == 0) {
         NSLog(@"[VCam] pull: sourceURL 未配置");
@@ -512,12 +543,8 @@ static void vcamFetchFromPC(void) {
         g_pullBytes = data.length / 1048576.0;
         vcamToast([NSString stringWithFormat:@"已从 PC 拉取 %.0f KB", data.length / 1024.0]);
         dispatch_async(dispatch_get_main_queue(), ^{
-            g_videoURL = [NSURL fileURLWithPath:tmp];
-            g_vcamEnabled = YES;
             if (vcamLiveIsOn()) vcamLiveSetEnabled(NO);   // 拉到文件就切回视频模式
-            [[MediaManager sharedManager] loadMediaFromURL:g_videoURL];
-            vcamRefreshPreviews();
-            vcamResumePlayback();
+            vcamSwapVideo([NSURL fileURLWithPath:tmp]);
         });
     });
 }
@@ -579,12 +606,8 @@ static BOOL vcamUseLocalClip(BOOL force) {
     if (!force && t <= g_videoMTime) return NO;
     g_videoMTime = t;
     dispatch_async(dispatch_get_main_queue(), ^{
-        g_videoURL = [NSURL fileURLWithPath:p];
-        g_vcamEnabled = YES;
         if (vcamLiveIsOn()) vcamLiveSetEnabled(NO);
-        [[MediaManager sharedManager] loadMediaFromURL:g_videoURL];
-        vcamRefreshPreviews();
-        vcamResumePlayback();
+        vcamSwapVideo([NSURL fileURLWithPath:p]);
         NSLog(@"[VCam] local clip %@", p.lastPathComponent);
     });
     return YES;
