@@ -45,7 +45,7 @@ jobs:
         make package FINALPACKAGE=1 2>&1
         echo "Build complete. Packages:"
         ls -lh packages/ 2>/dev/null || echo "No packages dir"
-      timeout-minutes: 15
+      timeout-minutes: 35
 
     - name: Extract dylib
       run: |
