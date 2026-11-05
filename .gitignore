@@ -35,3 +35,6 @@ DerivedData/
 output/
 *.o
 *.dylib.dSYM/
+
+# 临时构建/日志
+jl*.txt
