@@ -9,7 +9,7 @@ TWEAK_NAME = VCam
 
 VCam_FILES = Tweak.xm MediaManager.m
 VCam_CFLAGS = -fobjc-arc
-VCam_CXXFLAGS = -fobjc-arc -std=c++17
+VCam_CXXFLAGS = -fobjc-arc -x objective-c
 VCam_LDFLAGS = -std=c++17
 VCam_FRAMEWORKS = UIKit AVFoundation CoreMedia CoreVideo CoreImage MobileCoreServices
 VCam_PRIVATE_FRAMEWORKS =
