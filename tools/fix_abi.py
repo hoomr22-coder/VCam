@@ -29,6 +29,8 @@ def patch_macho(blob: bytes) -> tuple[bytes, int]:
             cpu, sub, off, size = struct.unpack(">iIII", d[base:base + 16])
             if cpu != 0x0100000C or size > len(d) - off:      # 只改 arm64e
                 continue
+            if sub not in (2, ARM64E_ABI2):                   # 0 = 普通 arm64，别动
+                continue
             # 头部必须和代码一致：带 ptrauth 指令才是 ABI v2，否则是 v1
             want = ARM64E_ABI2 if PAC in d[off:off + size] else 2
             if sub != want:
