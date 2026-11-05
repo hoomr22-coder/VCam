@@ -39,8 +39,14 @@ for A in arm64 arm64e; do
     "$OUT/$A"/*.o -o "$OUT/$A/VCam.dylib"
 done
 
-echo "==> lipo + sign"
-lipo -create -output "$OUT/VCam.dylib" "$OUT/arm64/VCam.dylib" "$OUT/arm64e/VCam.dylib"
+echo "==> fat + sign"
+python3 - <<'PY'
+import struct, glob
+for p in sorted(glob.glob("build/*/VCam.dylib")):
+    d = open(p, "rb").read(12)
+    print("  ", p, "cpu", hex(struct.unpack("<I", d[4:8])[0]), "sub", hex(struct.unpack("<I", d[8:12])[0]))
+PY
+python3 tools/fat.py "$OUT/VCam.dylib" "$OUT/arm64/VCam.dylib" "$OUT/arm64e/VCam.dylib"
 LDid=$(command -v ldid || command -v "$THEOS/bin/ldid" || true)
 [ -n "$LDid" ] && "$LDid" -S"$OUT/VCam.dylib" || echo "warn: ldid not found, skip signing"
 python3 tools/fix_abi.py --dylib "$OUT/VCam.dylib"
