@@ -70,7 +70,7 @@ def main():
     for dirpath, _, names in os.walk(base):
         for n in names:
             src = os.path.join(dirpath, n)
-            rel = os.path.relpath(src, base)
+            rel = os.path.relpath(src, base).replace(os.sep, "/")   # Windows 上 relpath 给反斜杠
             if rel.startswith("DEBIAN"):
                 continue
             mode = 0o755 if os.access(src, os.X_OK) else 0o644
