@@ -23,23 +23,25 @@ def patch_macho(blob: bytes) -> tuple[bytes, int]:
     fixed = 0
     if struct.unpack(">I", d[:4])[0] == 0xCAFEBABE:          # fat
         n = struct.unpack(">I", d[4:8])[0]
+        PAC = b"\x7f\x23\x03\xd5"                            # pacibsp
         for i in range(n):
             base = 8 + i * 20
-            if struct.unpack(">I", d[base + 4:base + 8])[0] == 2:
-                d[base + 4:base + 8] = struct.pack(">I", ARM64E_ABI2)
+            cpu, sub, off, size = struct.unpack(">iIII", d[base:base + 16])
+            if cpu != 0x0100000C or size > len(d) - off:      # 只改 arm64e
+                continue
+            # 头部必须和代码一致：带 ptrauth 指令才是 ABI v2，否则是 v1
+            want = ARM64E_ABI2 if PAC in d[off:off + size] else 2
+            if sub != want:
+                d[base + 4:base + 8] = struct.pack(">I", want)
+                d[off + 8:off + 12] = struct.pack("<I", want)
                 fixed += 1
-        # 切片内的 mach_header 也要一致
-        for i in range(n):
-            base = 8 + i * 20
-            off, size = struct.unpack(">II", d[base + 8:base + 16])
-            if size > 32 and off + 12 <= len(d):
-                if struct.unpack("<I", d[off:off + 4])[0] == 0xFEEDFACF and \
-                        struct.unpack("<I", d[off + 8:off + 12])[0] == 2:
-                    d[off + 8:off + 12] = struct.pack("<I", ARM64E_ABI2)
-                    fixed += 1
     elif struct.unpack("<I", d[:4])[0] == 0xFEEDFACF:        # thin
-        if struct.unpack("<I", d[8:12])[0] == 2:
-            d[8:12] = struct.pack("<I", ARM64E_ABI2)
+        cur = struct.unpack("<I", d[8:12])[0]
+        if cur not in (2, ARM64E_ABI2):                       # 只碰 arm64e；arm64 的 subtype 是 0
+            return blob, 0
+        want = ARM64E_ABI2 if b"\x7f\x23\x03\xd5" in d else 2
+        if cur != want:
+            d[8:12] = struct.pack("<I", want)
             fixed += 1
     return bytes(d), fixed
 
