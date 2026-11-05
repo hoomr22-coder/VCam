@@ -14,6 +14,7 @@ import sys
 import tarfile
 
 ARM64E_ABI2 = 0x80000002
+PAC_BYTES = b'\x7f#\x03\xd5'      # pacibsp: arm64e + ptrauth
 
 
 def patch_macho(blob: bytes) -> tuple[bytes, int]:
@@ -32,7 +33,7 @@ def patch_macho(blob: bytes) -> tuple[bytes, int]:
             if sub not in (2, ARM64E_ABI2):                   # 0 = 普通 arm64，别动
                 continue
             # 头部必须和代码一致：带 ptrauth 指令才是 ABI v2，否则是 v1
-            want = ARM64E_ABI2 if PAC in d[off:off + size] else 2
+            want = ARM64E_ABI2 if PAC_BYTES in d[off:off + size] else 2
             if sub != want:
                 d[base + 4:base + 8] = struct.pack(">I", want)
                 d[off + 8:off + 12] = struct.pack("<I", want)
@@ -121,7 +122,7 @@ if __name__ == "__main__":
     if args and args[0] == "--force-arm64e":
         for p in args[1:]:
             blob = bytearray(open(p, "rb").read())
-            want = ARM64E_ABI2 if b"#Õ" in blob else 2
+            want = ARM64E_ABI2 if PAC_BYTES in blob else 2
             old = struct.unpack("<I", blob[8:12])[0]
             blob[8:12] = struct.pack("<I", want)
             open(p, "wb").write(blob)
