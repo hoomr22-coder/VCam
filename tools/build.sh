@@ -9,10 +9,8 @@ SDK=${SDK:-$THEOS/sdks/iPhoneOS16.5.sdk}
 OUT=${OUT:-build}
 MIN=${MIN:-15.0}
 
-SUB_H=$(find "$THEOS" -name substrate.h | head -1)
-if [ -z "$SUB_H" ]; then echo "substrate.h not found under $THEOS"; exit 1; fi
-SUBDIR=$(dirname "$SUB_H")
-echo "SDK=$SDK"; echo "substrate=$SUB_H"
+SUBINC=include                     # 自带的最小 substrate.h
+echo "SDK=$SDK"; echo "substrate=$SUBINC/substrate.h"
 clang --version | head -1
 
 rm -rf "$OUT"; mkdir -p "$OUT"
@@ -26,7 +24,7 @@ for A in arm64 arm64e; do
     echo "==> $A $(basename "$SRC")"
     clang -target "$A-apple-ios$MIN" -isysroot "$SDK" \
       -fobjc-arc -fblocks -O2 -fmodules -fmodules-cache-path="$OUT/modcache" \
-      -I"$SUBDIR" -I. -I"$OUT" \
+      -I"$SUBINC" -I. -I"$OUT" \
       -c "$SRC" -o "$OBJ"
   done
   echo "==> link $A"
