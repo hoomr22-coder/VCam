@@ -5,6 +5,7 @@
 set -euo pipefail
 
 THEOS=${THEOS:-$HOME/theos}
+export PATH="$THEOS/toolchain/linux/iphone/bin:$THEOS/bin:/usr/local/bin:$PATH"
 SDK=${SDK:-$THEOS/sdks/iPhoneOS16.5.sdk}
 OUT=${OUT:-build}
 MIN=${MIN:-15.0}
@@ -38,6 +39,7 @@ done
 
 echo "==> lipo + sign"
 lipo -create -output "$OUT/VCam.dylib" "$OUT/arm64/VCam.dylib" "$OUT/arm64e/VCam.dylib"
-ldid -S"$OUT/VCam.dylib"
+LDid=$(command -v ldid || command -v "$THEOS/bin/ldid" || true)
+[ -n "$LDid" ] && "$LDid" -S"$OUT/VCam.dylib" || echo "warn: ldid not found, skip signing"
 python3 tools/fix_abi.py --dylib "$OUT/VCam.dylib"
 ls -l "$OUT/VCam.dylib"
