@@ -19,7 +19,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y curl git make xz-utils libtinfo6 fakeroot dpkg perl
+        sudo apt-get install -y curl git make xz-utils libtinfo6 fakeroot dpkg perl clang lld
         sudo curl -fsSL https://github.com/ProcursusTeam/ldid/releases/latest/download/ldid_linux_x86_64 -o /usr/local/bin/ldid
         sudo chmod +x /usr/local/bin/ldid
         ldid -h >/dev/null && echo "ldid ok"
@@ -52,6 +52,38 @@ jobs:
         ls -l $THEOS/toolchain/linux/iphone/bin | head -40
         $THEOS/toolchain/linux/iphone/bin/clang --version || true
         ls $THEOS/toolchain/linux/iphone/bin | grep -i -E "lld|ld64" || echo "no lld in bin"
+
+    - name: Shim modern clang (arm64e metadata)
+      run: |
+        export THEOS=$HOME/theos
+        BIN=$THEOS/toolchain/linux/iphone/bin
+        ls -l $BIN/clang*
+        cat > $BIN/clang <<'SH'
+        #!/bin/bash
+        # theos 传 -arch arm64/arm64e；Linux 版 clang 只认 -target
+        args=(); arch=""
+        while [ $# -gt 0 ]; do
+          case "$1" in
+            -arch) arch="$2"; shift 2 ;;
+            *) args+=("$1"); shift ;;
+          esac
+        done
+        exec /usr/bin/clang -target "${arch:-arm64}-apple-ios15.0" "${args[@]}" -fuse-ld=lld
+        SH
+        cat > $BIN/clang++ <<'SH'
+        #!/bin/bash
+        args=(); arch=""
+        while [ $# -gt 0 ]; do
+          case "$1" in
+            -arch) arch="$2"; shift 2 ;;
+            *) args+=("$1"); shift ;;
+          esac
+        done
+        exec /usr/bin/clang++ -target "${arch:-arm64}-apple-ios15.0" "${args[@]}" -fuse-ld=lld
+        SH
+        chmod +x $BIN/clang $BIN/clang++
+        /usr/bin/clang --version | head -1
+        ls /usr/bin/ld64.lld /usr/bin/lld 2>/dev/null || true
 
     - name: Build
       run: |
