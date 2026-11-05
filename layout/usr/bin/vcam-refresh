@@ -59,16 +59,23 @@ if [ "${count:-0}" -lt 10 ]; then
     exit 1
 fi
 
+# 必须写 XML：ellekit 不认 OpenStep 老格式，写错了就是「不注入、不闪退、没虚拟摄像头」
 {
-    echo '{'
-    echo '	Filter = {'
-    echo '		Bundles = ('
+    echo '<?xml version="1.0" encoding="UTF-8"?>'
+    echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'
+    echo '<plist version="1.0">'
+    echo '<dict>'
+    echo '	<key>Filter</key>'
+    echo '	<dict>'
+    echo '		<key>Bundles</key>'
+    echo '		<array>'
     while IFS= read -r id; do
-        echo "			\"$id\","
+        echo "			<string>$id</string>"
     done < "$TMP"
-    echo '		);'
-    echo '	};'
-    echo '}'
+    echo '		</array>'
+    echo '	</dict>'
+    echo '</dict>'
+    echo '</plist>'
 } > "$OUT"
 
 [ -f "$PLIST" ] && cp -f "$PLIST" "$PLIST.bak"
