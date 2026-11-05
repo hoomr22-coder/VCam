@@ -11,8 +11,14 @@
 # 环境变量只为在 PC 上做离线自测（见 README/CI），设备上不要设置。
 set -u
 
-DIR=${VCAM_DIR:-/var/jb/Library/MobileSubstrate/DynamicLibraries}
-APPS=${VCAM_APPS:-/var/mobile/Containers/Bundle/Application}
+# 越狱根不写死：rootless 是 /var/jb，roothide 是 bootstrap vroot（"/" 即 jbroot，真机根在 /rootfs）
+if [ -d /rootfs/var/mobile ]; then
+    DIR=${VCAM_DIR:-/Library/MobileSubstrate/DynamicLibraries}
+    APPS=${VCAM_APPS:-/rootfs/var/mobile/Containers/Bundle/Application}
+else
+    DIR=${VCAM_DIR:-/var/jb/Library/MobileSubstrate/DynamicLibraries}
+    APPS=${VCAM_APPS:-/var/mobile/Containers/Bundle/Application}
+fi
 PLUTIL=${VCAM_PLUTIL:-/usr/bin/plutil}
 
 PLIST="$DIR/VCam.plist"

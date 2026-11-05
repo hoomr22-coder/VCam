@@ -24,3 +24,26 @@ jobs:
         with:
           name: VCam-deb-macos
           path: packages/*.deb
+
+  # roothide 版：越狱根是随机命名的 jbroot，包内路径不加 /var/jb 前缀，
+  # Architecture 由 theos 的 roothide scheme 强制为 iphoneos-arm64e。
+  build-roothide:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install roothide theos
+        run: |
+          export THEOS=$HOME/theos
+          bash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"
+          echo "THEOS=$THEOS" >> $GITHUB_ENV
+      - name: Build roothide package
+        run: |
+          export PATH=$THEOS/bin:$PATH
+          make clean || true
+          make package THEOS_PACKAGE_SCHEME=roothide FINALPACKAGE=1 2>&1
+          ls -lh packages/
+      - name: Upload roothide deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: VCam-deb-roothide
+          path: packages/*.deb

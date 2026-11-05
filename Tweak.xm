@@ -59,19 +59,45 @@ static void vcamLiveStop(void);
 static BOOL vcamLiveIsOn(void);
 static CGImageRef vcamLiveFrameCGImage(void);
 
-// 全局素材：/var/jb/Library/Application Support/VCam/video.mp4
+// 全局素材：<jbroot>/Library/Application Support/VCam/video.mp4
 // 打包时塞进 deb，所有注入了插件的 App 打开即用同一段视频，不必逐个选片。
 // config.plist 里 "enabled" = false 可全局关掉默认启用。
-static NSString *const kVCamGlobalDir = @"/var/jb/Library/Application Support/VCam";
+//
+// 越狱根不再写死 /var/jb：rootless 是 /var/jb，roothide 是每次越狱随机命名的 jbroot。
+// 不引入 <roothide.h>（只有 roothide theos 带那套头），改为从本 dylib 的加载路径反推：
+//   <jbroot>/Library/MobileSubstrate/DynamicLibraries/VCam.dylib
+static NSString *vcamJailbreakRoot(void) {
+    static NSString *root = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        Dl_info info;
+        if (dladdr((void *)&vcamJailbreakRoot, &info) && info.dli_fname) {
+            NSString *p = [NSString stringWithUTF8String:info.dli_fname];
+            NSString *suffix = @"/Library/MobileSubstrate/DynamicLibraries/VCam.dylib";
+            if ([p hasSuffix:suffix]) {
+                root = [p substringToIndex:p.length - suffix.length];
+            } else {
+                root = [p stringByDeletingLastPathComponent];
+            }
+        }
+        if (root.length == 0) root = @"/var/jb";
+        NSLog(@"[VCam] jailbreak root %@", root);
+    });
+    return root;
+}
+
+static NSString *vcamGlobalDir(void) {
+    return [vcamJailbreakRoot() stringByAppendingPathComponent:@"Library/Application Support/VCam"];
+}
 
 static void vcamLoadGlobalConfig(void) {
-    NSString *mp4 = [kVCamGlobalDir stringByAppendingPathComponent:@"video.mp4"];
+    NSString *mp4 = [vcamGlobalDir() stringByAppendingPathComponent:@"video.mp4"];
     if (![[NSFileManager defaultManager] fileExistsAtPath:mp4]) {
         NSLog(@"[VCam] no global video at %@", mp4);
         return;
     }
     NSDictionary *cfg = [NSDictionary dictionaryWithContentsOfFile:
-        [kVCamGlobalDir stringByAppendingPathComponent:@"config.plist"]];
+        [vcamGlobalDir() stringByAppendingPathComponent:@"config.plist"]];
     BOOL enabled = cfg[@"enabled"] ? [cfg[@"enabled"] boolValue] : YES;
     g_showButton = cfg[@"showButton"] ? [cfg[@"showButton"] boolValue] : NO;
     g_liveEnabled = cfg[@"live"] ? [cfg[@"live"] boolValue] : NO;
@@ -268,9 +294,9 @@ static void vcamRefreshPreviews(void) {
 // 局限：纯仿射，没有 3D 视角合成 —— 做不了明显转头，那是 LivePortrait 的活。
 static CGImageRef vcamLivePhotoImage(void) {
     if (g_livePhoto) return g_livePhoto;
-    NSString *p = [kVCamGlobalDir stringByAppendingPathComponent:@"photo.jpg"];
+    NSString *p = [vcamGlobalDir() stringByAppendingPathComponent:@"photo.jpg"];
     UIImage *img = [UIImage imageWithContentsOfFile:p];
-    if (!img) img = [UIImage imageWithContentsOfFile:[kVCamGlobalDir stringByAppendingPathComponent:@"photo.png"]];
+    if (!img) img = [UIImage imageWithContentsOfFile:[vcamGlobalDir() stringByAppendingPathComponent:@"photo.png"]];
     if (img.CGImage) {
         g_livePhoto = CGImageRetain(img.CGImage);
         g_livePhotoSize = CGSizeMake(CGImageGetWidth(g_livePhoto), CGImageGetHeight(g_livePhoto));

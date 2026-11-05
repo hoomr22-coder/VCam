@@ -1,9 +1,15 @@
 #!/bin/bash
 # 安装/升级后：修权限 → 重新生成作用域白名单 → 让 SpringBoard/相机重载 dylib
-JB=/var/jb
+# rootless: 脚本跑在真实 rootfs，越狱根在 /var/jb
+# roothide: 脚本跑在 bootstrap vroot，"/" 就是随机命名的 jbroot，真机 rootfs 挂在 /rootfs
+if [ -d /rootfs/var/mobile ]; then
+    JB=""
+elif [ -d /var/jb/Library ]; then
+    JB=/var/jb
+else
+    JB=""
+fi
 DL="$JB/Library/MobileSubstrate/DynamicLibraries"
-
-# rootless 下真实路径在 /var/jb，写 /Library/... 是空操作
 chmod 755 "$DL/VCam.dylib" 2>/dev/null
 chmod 644 "$DL/VCam.plist" 2>/dev/null
 chmod 644 "$DL/VCam.base" 2>/dev/null
