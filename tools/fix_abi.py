@@ -118,6 +118,15 @@ def patch_deb(path: str) -> int:
 
 if __name__ == "__main__":
     args = sys.argv[1:]
+    if args and args[0] == "--force-arm64e":
+        for p in args[1:]:
+            blob = bytearray(open(p, "rb").read())
+            want = ARM64E_ABI2 if b"#Õ" in blob else 2
+            old = struct.unpack("<I", blob[8:12])[0]
+            blob[8:12] = struct.pack("<I", want)
+            open(p, "wb").write(blob)
+            print(f"{p}: subtype {hex(old)} -> {hex(want)}")
+        sys.exit(0)
     if args and args[0] == "--dylib":
         for p in args[1:]:
             blob = open(p, "rb").read()

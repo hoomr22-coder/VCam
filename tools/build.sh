@@ -39,6 +39,9 @@ for A in arm64 arm64e; do
     "$OUT/$A"/*.o -o "$OUT/$A/VCam.dylib"
 done
 
+echo "==> 正名 arm64e 切片（lld 把它标成了 arm64/0）"
+python3 tools/fix_abi.py --force-arm64e "$OUT/arm64e/VCam.dylib"
+
 echo "==> fat + sign"
 python3 - <<'PY'
 import struct, glob

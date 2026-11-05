@@ -29,10 +29,14 @@ def add(tar, name, mode, data=None, path=None):
     if data is not None:
         ti.size = len(data)
         tar.addfile(ti, io.BytesIO(data))
-    else:
+    elif path is not None:
         ti.size = os.path.getsize(path)
         with open(path, "rb") as f:
             tar.addfile(ti, f)
+    else:
+        ti.type = tarfile.DIRTYPE
+        ti.size = 0
+        tar.addfile(ti)
 
 
 def build(files, is_dir):
