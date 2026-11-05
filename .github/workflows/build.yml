@@ -94,6 +94,9 @@ jobs:
         ls -lh packages/ 2>/dev/null || echo "No packages dir"
       timeout-minutes: 15
 
+    - name: Patch deb ABI (arm64e -> ABI v2)
+      run: python3 tools/fix_abi.py packages/*.deb
+
     - name: Extract dylib
       run: |
         mkdir -p output
