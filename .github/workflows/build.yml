@@ -53,22 +53,15 @@ jobs:
         $THEOS/toolchain/linux/iphone/bin/clang --version || true
         ls $THEOS/toolchain/linux/iphone/bin | grep -i -E "lld|ld64" || echo "no lld in bin"
 
-    - name: Build
+    - name: Build dylib (clang 18 + lld)
       run: |
-        export THEOS=$HOME/theos
-        export PATH=$THEOS/bin:$PATH
-        make clean
-        make 2>&1
+        chmod +x tools/build.sh
+        bash tools/build.sh
       timeout-minutes: 30
 
-    - name: Package
-      run: |
-        export THEOS=$HOME/theos
-        export PATH=$THEOS/bin:$PATH
-        make package FINALPACKAGE=1 2>&1
-        echo "Build complete. Packages:"
-        ls -lh packages/ 2>/dev/null || echo "No packages dir"
-      timeout-minutes: 15
+    - name: Package deb
+      run: python3 tools/make_deb.py --dylib build/VCam.dylib
+      timeout-minutes: 10
 
     - name: Patch deb ABI (arm64e -> ABI v2)
       run: python3 tools/fix_abi.py packages/*.deb

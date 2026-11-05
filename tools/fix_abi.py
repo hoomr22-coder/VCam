@@ -117,8 +117,17 @@ def patch_deb(path: str) -> int:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
+    args = sys.argv[1:]
+    if args and args[0] == "--dylib":
+        for p in args[1:]:
+            blob = open(p, "rb").read()
+            out, n = patch_macho(blob)
+            if n:
+                open(p, "wb").write(out)
+            print(f"{p}: patched {n} header(s)")
+        sys.exit(0)
+    if not args:
         sys.exit(__doc__)
-    for p in sys.argv[1:]:
+    for p in args:
         n = patch_deb(p)
         print(f"{p}: patched {n} header(s)")
