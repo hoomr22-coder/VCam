@@ -46,15 +46,53 @@ jobs:
         ls $THEOS/sdks/
       timeout-minutes: 20
 
-    - name: Build Tweak
+    - name: Build
       run: |
         export THEOS=$HOME/theos
         export PATH=$THEOS/bin:$PATH
         make clean
+        make 2>&1
+      timeout-minutes: 30
+
+    - name: Fix arm64e ABI subtype
+      run: |
+        python3 - <<'PY'
+        import glob, struct
+        # 新 clang 给 arm64e 生成 ptrauth 指令（ABI v2），旧 cctools 却把 cpusubtype 写成 2（ABI v1），
+        # iOS 18 的 dyld/objc 按头部信息处理这套代码 -> map_images 里 readClass trap。
+        fixed = 0
+        for p in glob.glob(".theos/obj/**/*.dylib", recursive=True):
+            d = bytearray(open(p, "rb").read())
+            if len(d) < 32:
+                continue
+            magic = struct.unpack(">I", d[:4])[0]
+            if magic == 0xcafebabe:                      # fat
+                n = struct.unpack(">I", d[4:8])[0]
+                for i in range(n):
+                    base = 8 + i * 20
+                    sub = struct.unpack(">I", d[base + 4:base + 8])[0]
+                    if sub == 2:
+                        d[base + 4:base + 8] = struct.pack(">I", 0x80000002)
+                        fixed += 1
+            elif struct.unpack("<I", d[:4])[0] == 0xfeedfacf:   # thin
+                if struct.unpack("<I", d[8:12])[0] == 2:
+                    d[8:12] = struct.pack("<I", 0x80000002)
+                    fixed += 1
+            else:
+                continue
+            open(p, "wb").write(d)
+            print("patched", p)
+        print("total patched entries:", fixed)
+        PY
+
+    - name: Package
+      run: |
+        export THEOS=$HOME/theos
+        export PATH=$THEOS/bin:$PATH
         make package FINALPACKAGE=1 2>&1
         echo "Build complete. Packages:"
         ls -lh packages/ 2>/dev/null || echo "No packages dir"
-      timeout-minutes: 35
+      timeout-minutes: 15
 
     - name: Extract dylib
       run: |
