@@ -9,38 +9,47 @@ on:
 jobs:
   build:
     name: Build iOS Tweak
-    runs-on: macos-13
-    
+    # macOS 跑单在这个账号上长期排队/15 分钟被取消，改用 Ubuntu + theos Linux 工具链
+    runs-on: ubuntu-latest
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
-        brew install ldid xz
+        sudo apt-get update
+        sudo apt-get install -y curl git make xz-utils libtinfo6 fakeroot dpkg perl
+        sudo curl -fsSL https://github.com/ProcursusTeam/ldid/releases/latest/download/ldid_linux_x86_64 -o /usr/local/bin/ldid
+        sudo chmod +x /usr/local/bin/ldid
+        ldid -h >/dev/null && echo "ldid ok"
       timeout-minutes: 10
 
     - name: Install Theos
       run: |
-        export THEOS=~/theos
-        git clone --recursive https://github.com/theos/theos.git ~/theos
-        echo "THEOS=$HOME/theos" >> $GITHUB_ENV
-        echo "PATH=$HOME/theos/bin:$PATH" >> $GITHUB_ENV
-      timeout-minutes: 10
+        export THEOS=$HOME/theos
+        git clone --recursive --depth 1 https://github.com/theos/theos.git $THEOS
+        echo "THEOS=$THEOS" >> $GITHUB_ENV
+        echo "PATH=$THEOS/bin:$PATH" >> $GITHUB_ENV
+      timeout-minutes: 15
 
-    - name: Install iOS SDK
+    - name: Install toolchain + SDK
       run: |
-        curl -fsSL https://github.com/theos/sdks/releases/download/master-146e41f/iPhoneOS16.5.sdk.tar.xz -o /tmp/sdk.tar.xz
-        mkdir -p $HOME/theos/sdks
-        tar -xf /tmp/sdk.tar.xz -C $HOME/theos/sdks
-        echo "Installed SDKs:"
-        ls $HOME/theos/sdks/
-      timeout-minutes: 10
+        export THEOS=$HOME/theos
+        mkdir -p $THEOS/toolchain $THEOS/sdks
+        curl -sL https://github.com/L1ghtmann/llvm-project/releases/latest/download/iOSToolchain-x86_64.tar.xz \
+          | tar -xJ -C $THEOS/toolchain/
+        ls $THEOS/toolchain/linux/iphone/bin/clang
+        curl -fsSL https://github.com/theos/sdks/archive/master.tar.gz -o /tmp/sdks.tar.gz
+        tar -xzf /tmp/sdks.tar.gz -C /tmp
+        cp -r /tmp/sdks-master/iPhoneOS*.sdk $THEOS/sdks/ || true
+        ls $THEOS/sdks/
+      timeout-minutes: 20
 
     - name: Build Tweak
       run: |
         export THEOS=$HOME/theos
-        export PATH=$HOME/theos/bin:$PATH
+        export PATH=$THEOS/bin:$PATH
         make clean
         make package FINALPACKAGE=1 2>&1
         echo "Build complete. Packages:"
@@ -59,9 +68,7 @@ jobs:
         cp "$DEB" output/
         cd output
         ar x ../packages/*.deb 2>/dev/null || dpkg-deb -x "$DEB" .
-        # Try to find dylib in extracted contents
         find . -name "*.dylib" -exec cp {} ./VCam.dylib \; 2>/dev/null
-        # If ar worked, try tar
         tar -xf data.tar* 2>/dev/null && find . -name "*.dylib" -exec cp {} ./VCam.dylib \; 2>/dev/null
         ls -lh
 
