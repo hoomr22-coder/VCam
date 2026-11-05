@@ -50,6 +50,7 @@ static double g_liveFPS = 0;
 static double g_liveFPSAt = 0;
 static CGImageRef g_livePhoto = NULL;
 static CGSize g_livePhotoSize = {0, 0};
+static int g_restarts = 0;
 static NSString *g_pullURL = nil;
 
 static void vcamAttachPreview(AVCaptureVideoPreviewLayer *pl);
@@ -623,7 +624,6 @@ static dispatch_source_t g_watchdogTimer = nil;
 
 static int g_stallTicks = 0;
 static int g_diagTicks = 0;
-static int g_restarts = 0;
 static int g_wdTicks = 0;
 
 // 屏幕上的自检信息（点 📷 → 状态），不依赖 syslog
