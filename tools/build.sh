@@ -5,14 +5,16 @@
 set -euo pipefail
 
 THEOS=${THEOS:-$HOME/theos}
-export PATH="$THEOS/toolchain/linux/iphone/bin:$THEOS/bin:/usr/local/bin:$PATH"
+export PATH="/usr/bin:/usr/local/bin:$PATH"
+export PATH="$PATH:$THEOS/toolchain/linux/iphone/bin:$THEOS/bin"   # lipo/otool 从这里来，clang 仍是系统的 18
 SDK=${SDK:-$THEOS/sdks/iPhoneOS16.5.sdk}
 OUT=${OUT:-build}
 MIN=${MIN:-15.0}
+CLANG=${CLANG:-/usr/bin/clang}
 
 SUBINC=include                     # 自带的最小 substrate.h
 echo "SDK=$SDK"; echo "substrate=$SUBINC/substrate.h"
-clang --version | head -1
+"$CLANG" --version | head -1
 
 rm -rf "$OUT"; mkdir -p "$OUT"
 perl "$THEOS/bin/logos.pl" Tweak.xm > "$OUT/Tweak.m"
@@ -23,13 +25,13 @@ for A in arm64 arm64e; do
   for SRC in "$OUT/Tweak.m" MediaManager.m; do
     OBJ="$OUT/$A/$(basename "${SRC%.*}").o"
     echo "==> $A $(basename "$SRC")"
-    clang -target "$A-apple-ios$MIN" -isysroot "$SDK" \
+    "$CLANG" -target "$A-apple-ios$MIN" -isysroot "$SDK" \
       -fobjc-arc -fblocks -O2 -fmodules -fmodules-cache-path="$OUT/modcache" \
       -I"$SUBINC" -I. -I"$OUT" \
       -c "$SRC" -o "$OBJ"
   done
   echo "==> link $A"
-  clang -target "$A-apple-ios$MIN" -isysroot "$SDK" -dynamiclib -fuse-ld=lld \
+  "$CLANG" -target "$A-apple-ios$MIN" -isysroot "$SDK" -dynamiclib -fuse-ld=lld \
     -framework UIKit -framework AVFoundation -framework CoreMedia -framework CoreImage \
     -framework CoreVideo -framework ImageIO -framework QuartzCore -framework MobileCoreServices \
     -install_name /Library/MobileSubstrate/DynamicLibraries/VCam.dylib \
