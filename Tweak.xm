@@ -635,6 +635,27 @@ static BOOL vcamUseLocalClip(BOOL force) {
     return YES;
 }
 
+// DCIM 轮询：PC 推一个新片段进去，相机里 1.5 秒内就换过来，不用重开 App。
+// 通道是 USB（AFC），所以不依赖局域网、也不依赖系统相机有没有网络权限。
+// ARC 下 dispatch_source_t 必须存全局：局部变量出函数就被释放，定时器等于没建。
+static dispatch_source_t g_dcimPollTimer = nil;
+
+static void vcamStartDCIMPoll(void) {
+    if (g_dcimPollTimer) return;
+    dispatch_queue_t q = dispatch_get_global_queue(QOS_CLASS_UTILITY, 0);
+    g_dcimPollTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, q);
+    if (!g_dcimPollTimer) return;
+    dispatch_source_set_timer(g_dcimPollTimer,
+                              dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)),
+                              (uint64_t)(1.5 * NSEC_PER_SEC),
+                              (uint64_t)(0.5 * NSEC_PER_SEC));
+    dispatch_source_set_event_handler(g_dcimPollTimer, ^{
+        @autoreleasepool { vcamUseLocalClip(NO); }
+    });
+    dispatch_resume(g_dcimPollTimer);
+    NSLog(@"[VCam] dcim poll started");
+}
+
 // 播放看门狗：拍照/查看照片/切前后台之后，AVPlayer 很容易被系统停住，
 // 或者已经在结尾停下，表现就是"虚拟画面卡住不动"（1.0.9 反馈）。
 // 每秒自检：播到结尾就回头、没在播就续播、item 失败就重建。
@@ -1249,5 +1270,8 @@ static void vcamStartVolumeMonitor(void) {
                     @autoreleasepool { vcamFetchFromPC(); }
                 });
         }
+
+        // USB 通道常开：DCIM 里有新片段就自动换（1.5 秒轮询）
+        vcamStartDCIMPoll();
     }
 }
