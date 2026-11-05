@@ -46,6 +46,13 @@ jobs:
         ls $THEOS/sdks/
       timeout-minutes: 20
 
+    - name: Inspect toolchain
+      run: |
+        export THEOS=$HOME/theos
+        ls -l $THEOS/toolchain/linux/iphone/bin | head -40
+        $THEOS/toolchain/linux/iphone/bin/clang --version || true
+        ls $THEOS/toolchain/linux/iphone/bin | grep -i -E "lld|ld64" || echo "no lld in bin"
+
     - name: Build
       run: |
         export THEOS=$HOME/theos
