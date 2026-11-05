@@ -519,34 +519,55 @@ static void vcamSwapVideo(NSURL *url) {
     NSLog(@"[VCam] swapped to %@", url.lastPathComponent);
 }
 
+static NSArray<NSString *> *vcamPullCandidates(void) {
+    NSMutableArray *out = [NSMutableArray array];
+    if (g_pullURL.length) [out addObject:g_pullURL];
+    // 同一台 PC 的另一个网段地址：iStoreOS 把 192.168.1.200 DNAT 到 192.168.100.154。
+    // 手机在哪个网段事先不知道，两个都试一遍（配哪个就先试哪个）。
+    NSDictionary *map = @{ @"192.168.100.154": @"192.168.1.200",
+                           @"192.168.1.200": @"192.168.100.154" };
+    for (NSString *key in map) {
+        if (g_pullURL.length && [g_pullURL rangeOfString:key].location != NSNotFound) {
+            NSString *alt = [g_pullURL stringByReplacingOccurrencesOfString:key withString:map[key]];
+            if (![out containsObject:alt]) [out addObject:alt];
+        }
+    }
+    return out;
+}
+
 static void vcamFetchFromPC(void) {
     if (g_pullURL.length == 0) {
         NSLog(@"[VCam] pull: sourceURL 未配置");
         return;
     }
-    NSString *url = [g_pullURL copy];
-    NSLog(@"[VCam] pull %@", url);
+    NSArray<NSString *> *cands = vcamPullCandidates();
+    NSLog(@"[VCam] pull candidates %@", cands);
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-        NSData *data = vcamHTTPGet(url, 400u * 1024u * 1024u);
-        if (data.length < 1024) {
-            g_pullFail++;
-            NSLog(@"[VCam] pull failed (%lu B)", (unsigned long)data.length);
-            BOOL local = vcamUseLocalClip(YES);      // 网络不通就走 DCIM 通道
-            vcamToast(local ? @"从 PC 拉取失败，已改用 DCIM 里的片段"
-                            : @"从 PC 拉取失败，DCIM 里也没有片段");
+        for (NSString *url in cands) {
+            NSLog(@"[VCam] pull try %@", url);
+            NSData *data = vcamHTTPGet(url, 400u * 1024u * 1024u);
+            if (data.length < 1024) {
+                NSLog(@"[VCam] pull miss %@ (%lu B)", url, (unsigned long)data.length);
+                continue;
+            }
+            NSString *tmp = [NSTemporaryDirectory() stringByAppendingPathComponent:@"vcam_pull.mp4"];
+            BOOL ok = [data writeToFile:tmp atomically:YES];
+            NSLog(@"[VCam] pull got %.1f MB ok=%d from %@", data.length / 1048576.0, ok, url);
+            if (!ok) continue;
+            g_pullOK++;
+            g_pullBytes = data.length / 1048576.0;
+            vcamToast([NSString stringWithFormat:@"已从 PC 拉取 %.0f KB", data.length / 1024.0]);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (vcamLiveIsOn()) vcamLiveSetEnabled(NO);   // 拉到文件就切回视频模式
+                vcamSwapVideo([NSURL fileURLWithPath:tmp]);
+            });
             return;
         }
-        NSString *tmp = [NSTemporaryDirectory() stringByAppendingPathComponent:@"vcam_pull.mp4"];
-        BOOL ok = [data writeToFile:tmp atomically:YES];
-        NSLog(@"[VCam] pull got %.1f MB ok=%d", data.length / 1048576.0, ok);
-        if (!ok) { g_pullFail++; return; }
-        g_pullOK++;
-        g_pullBytes = data.length / 1048576.0;
-        vcamToast([NSString stringWithFormat:@"已从 PC 拉取 %.0f KB", data.length / 1024.0]);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (vcamLiveIsOn()) vcamLiveSetEnabled(NO);   // 拉到文件就切回视频模式
-            vcamSwapVideo([NSURL fileURLWithPath:tmp]);
-        });
+        g_pullFail++;
+        NSLog(@"[VCam] pull failed: all candidates dead");
+        BOOL local = vcamUseLocalClip(YES);      // 网络不通就走 DCIM 通道
+        vcamToast(local ? @"从 PC 拉取失败，已改用 DCIM 里的片段"
+                        : @"从 PC 拉取失败，DCIM 里也没有片段");
     });
 }
 
