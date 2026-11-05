@@ -11,7 +11,15 @@ jobs:
       - name: Install theos
         run: |
           export THEOS=$HOME/theos
-          bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"
+          # 安装脚本打 api.github.com，偶发 504/exit 8 是瞬时故障 —— 重试，别改构建链
+          for i in 1 2 3; do
+            if bash -c "$(curl -fsSL https://raw.githubusercontent.com/theos/theos/master/bin/install-theos)"; then
+              break
+            fi
+            echo "theos install attempt $i failed, retrying in 20s"
+            sleep 20
+          done
+          test -d "$THEOS/makefiles"
           echo "THEOS=$THEOS" >> $GITHUB_ENV
       - name: Build
         run: |
