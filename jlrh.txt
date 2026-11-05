@@ -1,0 +1,1141 @@
+build-roothide	Set up job	﻿2026-11-05T14:36:07.0520410Z Current runner version: '2.338.2'
+build-roothide	Set up job	2026-11-05T14:36:07.0539250Z ##[group]Runner Image Provisioner
+build-roothide	Set up job	2026-11-05T14:36:07.0539860Z Hosted Compute Agent
+build-roothide	Set up job	2026-11-05T14:36:07.0540220Z Version: 20260828.587
+build-roothide	Set up job	2026-11-05T14:36:07.0540620Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+build-roothide	Set up job	2026-11-05T14:36:07.0541090Z Build Date: 2026-08-28T16:44:25Z
+build-roothide	Set up job	2026-11-05T14:36:07.0541520Z Worker ID: {0a2fe10c-0115-488d-bab2-472e250238d2}
+build-roothide	Set up job	2026-11-05T14:36:07.0541970Z Azure Region: westus
+build-roothide	Set up job	2026-11-05T14:36:07.0542330Z ##[endgroup]
+build-roothide	Set up job	2026-11-05T14:36:07.0543200Z ##[group]Operating System
+build-roothide	Set up job	2026-11-05T14:36:07.0543600Z macOS
+build-roothide	Set up job	2026-11-05T14:36:07.0543930Z 14.8.9
+build-roothide	Set up job	2026-11-05T14:36:07.0544380Z 23J631
+build-roothide	Set up job	2026-11-05T14:36:07.0544710Z ##[endgroup]
+build-roothide	Set up job	2026-11-05T14:36:07.0545060Z ##[group]Runner Image
+build-roothide	Set up job	2026-11-05T14:36:07.0545440Z Image: macos-14-arm64
+build-roothide	Set up job	2026-11-05T14:36:07.0545810Z Version: 20260831.0302.1
+build-roothide	Set up job	2026-11-05T14:36:07.0546570Z Included Software: https://github.com/actions/runner-images/blob/macos-14-arm64/20260831.0302/images/macos/macos-14-arm64-Readme.md
+build-roothide	Set up job	2026-11-05T14:36:07.0547740Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-14-arm64%2F20260831.0302
+build-roothide	Set up job	2026-11-05T14:36:07.0548400Z ##[endgroup]
+build-roothide	Set up job	2026-11-05T14:36:07.0549200Z ##[group]GITHUB_TOKEN Permissions
+build-roothide	Set up job	2026-11-05T14:36:07.0550540Z Contents: read
+build-roothide	Set up job	2026-11-05T14:36:07.0550900Z Metadata: read
+build-roothide	Set up job	2026-11-05T14:36:07.0551260Z Packages: read
+build-roothide	Set up job	2026-11-05T14:36:07.0551610Z ##[endgroup]
+build-roothide	Set up job	2026-11-05T14:36:07.0553050Z Secret source: Actions
+build-roothide	Set up job	2026-11-05T14:36:07.0553620Z Cache mode: write
+build-roothide	Set up job	2026-11-05T14:36:07.0554050Z Prepare workflow directory
+build-roothide	Set up job	2026-11-05T14:36:07.0888830Z Prepare all required actions
+build-roothide	Set up job	2026-11-05T14:36:07.0934700Z Getting action download info
+build-roothide	Set up job	2026-11-05T14:36:07.5312230Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+build-roothide	Set up job	2026-11-05T14:36:08.0672650Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+build-roothide	Set up job	2026-11-05T14:36:08.3334460Z Complete job name: build-roothide
+build-roothide	Run actions/checkout@v4	﻿2026-11-05T14:36:08.3928420Z ##[group]Run actions/checkout@v4
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3929020Z with:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3929360Z   repository: hoomr22-coder/VCam
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3932090Z   token: ***
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3932410Z   ssh-strict: true
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3932740Z   ssh-user: git
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3933070Z   persist-credentials: true
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3933430Z   clean: true
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3933760Z   sparse-checkout-cone-mode: true
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3934150Z   fetch-depth: 1
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3934470Z   fetch-tags: false
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3934860Z   show-progress: true
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3935250Z   lfs: false
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3935560Z   submodules: false
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3935890Z   set-safe-directory: true
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3936270Z   allow-unsafe-pr-checkout: false
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.3936760Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.9779060Z Syncing repository: hoomr22-coder/VCam
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.9780670Z ##[group]Getting Git version info
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:08.9781180Z Working directory is '/Users/runner/work/VCam/VCam'
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.0151680Z [command]/opt/homebrew/bin/git version
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.1769700Z git version 2.55.0
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.1892410Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.1904380Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/2fd88036-0632-47fe-85c3-1de3122a23cc/.gitconfig'
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.1906600Z Temporarily overriding HOME='/Users/runner/work/_temp/2fd88036-0632-47fe-85c3-1de3122a23cc' before making global git config changes
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.1908160Z Adding repository directory to the temporary git global config as a safe directory
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.1909500Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/VCam/VCam
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.1981490Z Deleting the contents of '/Users/runner/work/VCam/VCam'
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.2007370Z ##[group]Initializing the repository
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.2084960Z [command]/opt/homebrew/bin/git init /Users/runner/work/VCam/VCam
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.3077420Z hint: Using 'master' as the name for the initial branch. This default branch name
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.3130430Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.3729830Z hint: to use in all of your new repositories, which will suppress this warning,
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.3853530Z hint: call:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.3884090Z hint:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4209930Z hint: 	git config --global init.defaultBranch <name>
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4226510Z hint:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4352630Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4355450Z hint: 'development'. The just-created branch can be renamed via this command:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4357010Z hint:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4357860Z hint: 	git branch -m <name>
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4358730Z hint:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4359670Z hint: Disable this message with "git config set advice.defaultBranchName false"
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4360900Z Initialized empty Git repository in /Users/runner/work/VCam/VCam/.git/
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4366190Z [command]/opt/homebrew/bin/git remote add origin https://github.com/hoomr22-coder/VCam
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4386980Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4388890Z ##[group]Disabling automatic garbage collection
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4393840Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4403720Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4406060Z ##[group]Setting up auth
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4408420Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.4446030Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.5078080Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.5191780Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.6233720Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.6282310Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.7982910Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.8301040Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.8427850Z ##[group]Fetching the repository
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:09.8582280Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +771d64467d9d10dcc2fa7b11ed050ccaa002622e:refs/remotes/origin/main
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4135670Z From https://github.com/hoomr22-coder/VCam
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4137500Z  * [new ref]         771d64467d9d10dcc2fa7b11ed050ccaa002622e -> origin/main
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4140320Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4141040Z ##[group]Determining the checkout info
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4142320Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4151210Z [command]/opt/homebrew/bin/git sparse-checkout disable
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4222500Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4279670Z ##[group]Checking out the ref
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4287900Z [command]/opt/homebrew/bin/git checkout --progress --force -B main refs/remotes/origin/main
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4489390Z Switched to a new branch 'main'
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4492170Z branch 'main' set up to track 'origin/main'.
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4496900Z ##[endgroup]
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4575430Z [command]/opt/homebrew/bin/git log -1 --format=%H
+build-roothide	Run actions/checkout@v4	2026-11-05T14:36:10.4628190Z 771d64467d9d10dcc2fa7b11ed050ccaa002622e
+build-roothide	Install roothide theos	﻿2026-11-05T14:36:10.4854620Z ##[group]Run export THEOS=$HOME/theos
+build-roothide	Install roothide theos	2026-11-05T14:36:10.4855410Z ^[[36;1mexport THEOS=$HOME/theos^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:10.4857020Z ^[[36;1mbash -c "$(curl -fsSL https://raw.githubusercontent.com/roothide/theos/master/bin/install-theos)"^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:10.4858240Z ^[[36;1mecho "THEOS=$THEOS" >> $GITHUB_ENV^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:10.4941300Z shell: /bin/bash -e {0}
+build-roothide	Install roothide theos	2026-11-05T14:36:10.4942590Z ##[endgroup]
+build-roothide	Install roothide theos	2026-11-05T14:36:10.6683980Z ^[[0;34m==> ^[[1;34mTheos Installer:^[[m Starting install...
+build-roothide	Install roothide theos	2026-11-05T14:36:10.6690900Z 
+build-roothide	Install roothide theos	2026-11-05T14:36:10.6691470Z ^[[0;37m==> ^[[1;37mPlatform: Darwin^[[m
+build-roothide	Install roothide theos	2026-11-05T14:36:10.6747280Z 
+build-roothide	Install roothide theos	2026-11-05T14:36:10.6749280Z ^[[0;36m==> ^[[1;36mPreparing to install dependencies...^[[m
+build-roothide	Install roothide theos	2026-11-05T14:36:13.7336300Z ^[[34m==>^[[0m ^[[1mUpdating Homebrew...^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:47.1045820Z To restore the stashed changes to /opt/homebrew/Library/Taps/homebrew/homebrew-core, run:
+build-roothide	Install roothide theos	2026-11-05T14:36:47.1059300Z   cd /opt/homebrew/Library/Taps/homebrew/homebrew-core && git stash pop
+build-roothide	Install roothide theos	2026-11-05T14:36:48.5108410Z ^[[34m==>^[[0m ^[[1mDownloading https://ghcr.io/v2/homebrew/core/portable-ruby/blobs/sha256:43ff285a82f48c84a06d0676a3800815a19d290d32e44182ddd7a6e95478e18e^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:48.7075320Z 
+build-roothide	Install roothide theos	2026-11-05T14:36:48.8110600Z #=#=#                                                                          
+build-roothide	Install roothide theos	2026-11-05T14:36:48.8317030Z ########################################################                  78.1%
+build-roothide	Install roothide theos	2026-11-05T14:36:48.8318350Z ######################################################################## 100.0%
+build-roothide	Install roothide theos	2026-11-05T14:36:49.0080070Z ^[[34m==>^[[0m ^[[1mPouring portable-ruby-4.0.9.arm64_big_sur.bottle.tar.gz^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0213770Z ^[[34m==>^[[0m ^[[1mHomebrew's analytics have entirely moved to our InfluxDB instance in the EU.^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0217820Z We gather less data than before and have destroyed all Google Analytics data:
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0219700Z   ^[[4mhttps://docs.brew.sh/Analytics^[[24m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0222140Z Please reconsider re-enabling analytics to help our volunteer maintainers with:
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0223940Z   brew analytics on
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0225770Z ^[[34m==>^[[0m ^[[1mHomebrew is run entirely by unpaid volunteers. Please consider donating:^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0227730Z   ^[[4mhttps://github.com/Homebrew/brew#-donations^[[24m
+build-roothide	Install roothide theos	2026-11-05T14:36:51.0228680Z 
+build-roothide	Install roothide theos	2026-11-05T14:36:51.9800400Z Updated 3 taps (azure/bicep, homebrew/core and homebrew/cask).
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0983340Z ^[[34m==>^[[0m ^[[1mNew Formulae^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0985070Z agent-desktop: Native desktop automation CLI for AI agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0986700Z agent-manager: Run Claude Code, Codex, OpenCode and other AI coding agents in tmux
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0988260Z all-smi: GPU monitoring tool for NVIDIA/Jetson/Apple Silicon/Tenstorrent
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0990540Z android-file-transfer-linux: Command-line MTP client for Android and other MTP devices
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0991640Z annotsv: Annotation and ranking of structural variations
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0992880Z apkid: Android application identifier for compilers, packers, and obfuscators
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0993590Z arcane-cli: Command-line client for the Arcane Docker management platform
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0994370Z arm-optimized-routines: Optimized implementations of various library functions for Arm processors
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0994930Z ascelerate: Command-line tool for the App Store Connect API
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0995580Z bashka: Static verification of installation bash scripts
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0996310Z baysor: Bayesian segmentation of imaging-based spatial transcriptomics data
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0996950Z bend: Language that blocks AI mistakes via proof
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0997520Z beszel: Lightweight server monitoring with historical data, Docker stats, and alerts
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0998250Z beszel-agent: Agent for the Beszel lightweight server monitoring platform
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0999120Z bitbucket-cli: CLI for Bitbucket Cloud and Data Center
+build-roothide	Install roothide theos	2026-11-05T14:36:52.0999650Z blint: Security linter and SBOM generator for binaries
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1001800Z bqlog: Cross-language logging library
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1002380Z budget-tracker: Feature rich TUI budget tracker app
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1010800Z buildkite: Work with Buildkite from the command-line
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1012080Z calcure: Modern TUI calendar and task manager
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1012640Z cargo-mutants: Inject bugs and see if your tests catch them
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1013180Z ccmux: Run all your AI coding agents in tmux
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1013810Z cellpose: Generalist algorithm for cell and nucleus segmentation
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1014440Z chisel-ubuntu: Carve and cut Debian packages into slices
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1015170Z confluence-markdown-exporter: Export Atlassian Confluence pages as Markdown files
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1015960Z ctcache: Cache for clang-tidy static analysis results
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1016530Z cx: CLI for querying and managing Coralogix observability data
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1017150Z cymbal: Language-agnostic code navigation CLI powered by tree-sitter
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1027690Z ddns-updater: Lightweight universal DDNS Updater program
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1028230Z deja: Predictive ghost-text autosuggestions for zsh
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1029010Z dep-scan: Security and risk audit tool for project dependencies and container images
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1029930Z designcraft-cli: Headless DesignCraft CLI and MCP server to script, export and validate layouts
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1030770Z diffle: Keyboard-first diff viewer with LSP support and GitHub integration
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1031950Z dnswire: Library for encoding/decoding different DNS encapsulations
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1032860Z doltlite: SQLite fork with Git-style version control via prolly trees
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1034590Z elasticmq: In-memory message queue with an Amazon SQS-compatible interface
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1036600Z entire-cli: Capture AI agent sessions in your Git workflow
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1037490Z erpc: Fault-tolerant RPC proxy with re-org-aware permanent caching
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1038870Z fastplong: Ultra-fast preprocessing and quality control for long-read sequencing data
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1040680Z ffmpeg@8: Play, record, convert, and stream select audio and video codecs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1042380Z filmcraft-cli: Headless FilmCraft CLI and MCP server to edit, render and export video projects
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1043080Z forgejo-runner: Official Actions runner for Forgejo instances
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1044890Z gitea-cli: Official command-line tool for Gitea
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1045770Z gitea-importer: CLI to migrate repositories from GitHub, GitLab and Gitea into Gitea
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1046650Z glci: Run GitLab CI/CD pipelines locally
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1047040Z go-arch-lint: Architecture linter for Go projects
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1047530Z godu: Simple golang utility helping to discover large files/folders
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1048250Z goleft: Tools for coverage and QC of BAM/CRAM files, including indexcov
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1048850Z gridcraft-cli: Headless GridCraft CLI and MCP server to inspect, convert and script workbooks
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1049540Z hidapitester: Command-line tool to exercise USB HID devices via HIDAPI
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1050060Z hister: Self-hosted search engine for your browsing history
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1050550Z hoppr: Collects, processes and bundles components listed in CycloneDX SBOMs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1053470Z icu4c@79: C/C++ and Java libraries for Unicode and globalization
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1054920Z jcode: AI coding agent harness for the terminal
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1057070Z ketch: Web search and scraping for agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1058310Z kontext: Identity, credentials, and governance for AI agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1059670Z kpt: Toolchain for composing, customizing, and deploying Kubernetes packages
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1061040Z kubectl-radar: Missing open-source Kubernetes UI with a built-in MCP server for AI agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1062370Z libgovirt: GObject-based library to access oVirt REST API
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1063190Z libklvanc: VANC Processing Framework
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1065650Z libkrunfw: Dynamic library bundling the guest payload consumed by libkrun
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1210430Z libmysofa: Reader for AES SOFA files to get better HRTFs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1211080Z licensee: Detect under what license a project is distributed
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1211510Z lightcraft-cli: Headless LightCraft CLI and MCP server to develop and export photos
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1212220Z localsend-cli: Terminal client for sending files between nearby devices
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1212670Z lovable-oj: Experimental next generation frontend tooling
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1213270Z mailtrap-local: Local email sandbox with SMTP server, web UI, and JSON API
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1213740Z maki: Efficient AI coding agent extendable by neovim-like Lua plugins
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1214090Z mariadb@12.3: Drop-in replacement for MySQL
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1214410Z mcpc: Universal command-line client for the Model Context Protocol (MCP)
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1214880Z memex: Index and search local agent conversation history
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1215230Z modflow6: USGS modular hydrologic model
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1215550Z morphe: Desktop app and CLI for patching Android apps with Morphe
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1215940Z nelm@1: Kubernetes deployment tool that manages and deploys Helm Charts
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1216440Z netbird: Securely connects across any network with one identity-based platform
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1216920Z ng-log: C++ library for application-level logging
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1217360Z noodle: Terminal REST client with file-based collections
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1217950Z ntfs2btrfs: In-place conversion of NTFS filesystem to Btrfs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1218630Z openfasttrace: Requirement tracing suite
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1219940Z openshell: Safe, private runtime for autonomous AI agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1220840Z openssh-sk-provider: Standalone FIDO2 SecurityKeyProvider (sk-libfido2) for the system OpenSSH
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1222780Z openssl@3.6: Cryptography and SSL/TLS Toolkit
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1223160Z osctrl-mcp: Fast and efficient osquery management
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1223500Z packslip: Signed release manifest for vendor binaries
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1223960Z pdfcraft-cli: Headless PdfCraft CLI and MCP server to create, edit, inspect and fill PDFs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1224410Z peekaboo: macOS screen capture, accessibility inspection and UI automation
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1224970Z percona-server@8.4: Drop-in MySQL replacement
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1225680Z percona-xtrabackup@8.4: Open source hot backup tool for InnoDB and XtraDB databases
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1226430Z pg_activity: Top-like interactive monitoring tool for PostgreSQL server activity
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1227040Z photocraft-cli: Headless PhotoCraft engine to convert, inspect and batch-edit images
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1227630Z planetiler: Flexible tool to build planet-scale vector tilesets from OpenStreetMap data fast
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1228220Z plink1: Whole-genome association analysis toolset
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1228800Z pnpm@11: Fast, disk space efficient package manager
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1229450Z portop: Terminal UI showing which processes are using TCP and UDP ports
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1230050Z pypy3.12: Implementation of Python 3 in Python
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1230720Z python-gdbm@3.15: Python interface to gdbm
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1231060Z python-tk@3.15: Python interface to Tcl/Tk
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1231800Z python@3.15: Interpreted, interactive, object-oriented programming language
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1232370Z qdl: Flash firmware on Qualcomm-based devices via USB Emergency Download (EDL) mode
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1233080Z regenie: Whole genome regression modelling of large genome-wide association studies
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1233540Z roborev: Background code review with AI agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1234360Z robot-framework-robocop: Static code analysis tool (linter) and code formatter for Robot Framework
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1235080Z rubocop: Ruby static code analyzer and formatter, based on the community Ruby style guide
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1236320Z rustqc: Fast genomics quality control tools for sequencing data
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1237250Z ryl: Fast YAML linter and formatter written in Rust
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1237810Z sabiql: Fast, safe-by-design, driverless, Vim-first DB TUI with ER diagrams
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1238450Z sac: Seismic Analysis Code, Community Edition
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1238930Z sbom-tools: SBOM multi-tool: diff, quality, compliance, vulnerability tracking, VEXes, etc.
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1239540Z sbomasm: Tool to assemble and edit SBOMs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1239820Z sbomqs: SBOM quality scorer and compliance checker
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1240140Z sdrmm: Modular, client-server software-defined radio
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1240400Z shpool: Persistent shell session manager
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1240700Z skillspector: Security scanner for AI agent skills
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1241100Z slivar: Filter and annotate genetic variants with expressions, for trios and cohorts
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1241610Z smbclient-ng: Fast and user friendly way to interact with SMB shares
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1242850Z sniffles: Structural variant caller for long-read sequencing data
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1244360Z snx-rs: Open-source client for Check Point VPN tunnels
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1245340Z sofka: Kubernetes TUI, reimagined in Rust
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1245700Z somalier: Relatedness, QC and ancestry checks from BAM/CRAM/VCF
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1246170Z speedtest-go: CLI and Go API to Test Internet Speed using speedtest.net
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1246560Z spidermonkey@140: JavaScript-C Engine
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1246840Z svt-jpegxs: JPEG XS codec
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1247260Z tailcat: Netcat-like tool over Tailscale's data plane, without its control plane
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1247820Z taoup: Tao of Unix Programming with Ruby-powered ANSI-colored fortunes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1248250Z tcltls: OpenSSL extension to Tcl
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1248660Z termaid: Render Mermaid diagrams in the terminal
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1249040Z tfswitch: Command-line tool to switch between Terraform versions
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1249550Z tgrep: Trigram-indexed grep for fast regex search in large codebases
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1249990Z tinycbor: Concise Binary Object Representation (CBOR) Library
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1250560Z tinyframe: Minimalistic library for reading and writing the Frame Streams protocol
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1251870Z titus: High-performance secrets scanner
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1253260Z toit: High-level programming language and SDK
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1254080Z tpcgen-cli: Fast TPC-H and TPC-DS data generator
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1255070Z trealla-prolog: Compact and efficient ISO Prolog interpreter written in plain old C
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1256110Z tsuzuri: Block-based Markdown notebook for the terminal
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1256910Z tunnelite: Secure tunneling to local applications
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1257500Z typdiff: Diff tool that generates Typst documents highlighting differences between inputs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1258330Z unixcw: Morse code tutor and command-line tools
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1258690Z upki: Implements platform-independent browser-grade certificate infrastructure
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1259110Z vcfexpress: Filter and format VCF/BCF files with Lua expressions
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1259700Z vectorcraft-cli: Headless VectorCraft CLI and MCP server to convert, inspect and script artwork
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1260100Z virglrenderer: VirGL virtual OpenGL renderer
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1260470Z vortix: Terminal UI for WireGuard and OpenVPN with live telemetry and leak guarding
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1261060Z wavemon: Ncurses-based monitoring application for wireless network devices on Linux
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1261640Z wordcraft-cli: Headless WordCraft CLI and MCP server to convert, inspect and script documents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1262380Z workmux: Git worktrees + tmux windows for zero-friction parallel dev
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1263260Z worldmonitor: Command-line client for the World Monitor global intelligence API
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1263770Z xevd: Very fast Essential Video Decoder, MPEG-5 EVC (Essential Video Coding)
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1264700Z xfr: Modern network bandwidth testing with TUI
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1265560Z xgrammar: Structured generation and reasoning engine for LLMs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1266380Z xwpe: Borland-style IDE clone with LSP/DAP support (terminal UI)
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1266770Z zig@0.16: Programming language designed for robustness, optimality, and clarity
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1267290Z zmij: Fast floating-point-to-string conversion library for C and C++
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1267780Z zvec-grep: Agent-friendly hybrid workspace search across code and non-code content
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1269880Z ^[[34m==>^[[0m ^[[1mNew Casks^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1270680Z activitywatch@experimental: Time tracker
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1271150Z agentiloop-agent: Autonomous agent
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1271580Z airbuild: AI agents that build iOS apps and handle App Store review
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1272020Z airstats: Menu bar system monitor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1272480Z amp-app: Coding agent and development environment
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1272940Z anydrag: Move any window by holding a modifier key and dragging anywhere on it
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1273310Z argo-books: Accounting software for small businesses
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1274690Z artcraft: Video crafting engine
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1275580Z artcraft-launcher: Installer and updater for the Craft App Suite
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1276550Z audacity@3: Multi-track audio editor and recorder
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1277330Z audioroute: System and per-app audio capture tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1278840Z auto-tune-central: Software download manager for Antares products
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1279850Z azure-cli: Microsoft Azure CLI 2.0
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1281340Z bambu-studio@beta: 3D model slicing software for 3D printers, maintained by Bambu Lab
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1282900Z beat-link-trigger: Event trigger and show automation tool for Pioneer CDJs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1284250Z betteraudio: Per-app volume, EQ and audio device control
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1285330Z bettermacwidgets: Live-animated widgets that sit on the desktop
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1286300Z biscotti: Private meeting transcription
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1287130Z bitmuse: Bit-perfect music player for local hi-res libraries
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1288010Z buholaunchpad: Launchpad alternative
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1289460Z buildin: Collaborative workspace for notes, documents and wikis
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1290580Z cadcraft: Computer-aided design and drafting tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1292400Z caldera-amp: Headless player for Plex music servers
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1293790Z calyx: Terminal for running and supervising coding agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1294300Z capso: Screenshot and screen recording tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1295160Z capsomnia: Utility that keeps your computer awake with the lid closed
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1296130Z clamshell: Keep the computer awake with the lid closed and the built-in display dark
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1298810Z claudoscope: Menu bar dashboard for Claude Code sessions
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1299570Z clawd-on-desk: Desktop pet that reacts to AI coding agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1301400Z cleeen: Disk cleaner
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1301950Z cline-app: AI coding agent
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1302370Z codeburn-app: Track AI coding token usage and cost
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1302800Z colamd: Markdown editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1303080Z crest: Notch utility with widgets
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1303490Z crest-browser: Open-source web browser
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1303910Z cuadriver: Background desktop automation driver for AI agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1304380Z cyd: Archive and delete your data on social media platforms
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1304850Z db-pro: Query, explore, and manage your databases with built-in AI
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1305310Z deckcraft: Presentation editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1306410Z deepseek-harness: Plugin-based AI agent desktop application
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1307090Z designcraft: Page layout and publishing tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1308100Z deutschlandgpt: Desktop client for the DeutschlandGPT AI assistant
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1310070Z deviceshelf: Scanner for devices, open ports and security risks on the local network
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1310950Z diri: Terminal workspace for running coding agents in parallel
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1312470Z diskboard: Disk benchmark and S.M.A.R.T. health monitor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1312850Z distill-web-monitor: Monitor webpages for changes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1313660Z dockdoor-pro: Dock replacement with widgets, profiles and window previews
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1315110Z doubaoime: Chinese input method with voice input and intelligent suggestions
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1317000Z easymac-cleaner: Cleaning, privacy, and system optimisation utility
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1318910Z effectcraft: Motion graphics and visual effects compositor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1319600Z emeetlink: Configuration utility for EMEET webcams and speakerphones
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1320500Z expose: Tunnel for sharing local web services
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1321140Z figcraft: Interface design and prototyping tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1321720Z filmcraft: Video editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1322240Z fl-studio: Digital audio production application
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1323110Z flick: Radial command wheel triggered by holding a key and flicking the mouse
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1324020Z fluxer: Chat for friends, groups, and communities with text, voice, and video
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1324910Z font-agrave-pro
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1325200Z font-aptos
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1326760Z font-asap-sharp
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1328290Z font-clarity-city
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1329340Z font-firjar
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1329520Z font-geist-serif
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1329720Z font-google-sans
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1329910Z font-google-sans-flex
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1330120Z font-ioskeley-mono-term-nerd-font
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1332210Z font-isometra
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1332390Z font-kripa
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1332830Z font-lexica-ultralegible
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1333270Z font-libre-caslon-condensed
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1333500Z font-libron
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1333710Z font-madhuban
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1334170Z font-mengshen-handwritten
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1334400Z font-nebula-sans
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1334640Z font-nevermind
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1334790Z font-nordwand-mono
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1335030Z font-pennstander
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1335260Z font-pyeojin-gothic
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1335500Z font-redaction
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1335710Z font-redaction-10
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1335930Z font-redaction-100
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1336120Z font-redaction-20
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1336280Z font-redaction-35
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1336450Z font-redaction-50
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1336640Z font-redaction-70
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1336840Z font-tiny5-duo
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1337240Z font-valley-sans
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1337470Z font-xmind
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1337800Z fore-studio-vitals: System monitor with per-app metrics and history
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1338190Z forel: Rule-based file automation
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1338460Z freellmapi: Local OpenAI-compatible LLM router
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1338910Z gamemaker@beta: Complete development tool for making 2D games
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1339360Z genoffice: Open-source AI office suite
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1339760Z ghostex: Workspace for running and reviewing multiple CLI coding agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1340320Z gitdifferent: Git client built around a three-way merge tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1340700Z gloomberb: Finance terminal
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1340950Z gridcraft: Spreadsheet editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1341290Z hagimimonitordirect: Menu bar monitor for system performance and hardware
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1341750Z herdr-app: Desktop app for terminals and coding agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1342150Z highball: Tool to run Windows games
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1342540Z hol-guard: Local-first runtime firewall for AI coding agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1342930Z holst: Online whiteboard for team collaboration
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1343350Z homebrew-app: Homebrew's official GUI
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1345720Z hoptodesk: Remote desktop and remote support tool with end-to-end encryption
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1347320Z hotkeyclash: Keyboard shortcut conflict detector
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1348210Z ideashell: AI partner for notes, voice, and to-dos
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1348680Z ideashell-cn: AI partner for notes, voice, and to-dos (China edition)
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1349070Z incy: Proxy client
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1350400Z jlcone: Desktop client for JLCPCB quoting, ordering and order tracking
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1350950Z jpki: Digital signature and authentication client for the My Number Card (JPKI)
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1351380Z junie: AI coding agent by JetBrains
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1351660Z kaku: Terminal optimised for AI coding
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1351970Z kero: Terminal app optimised for agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1352600Z keyboop: Keyboard layout switcher with local voice dictation
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1353050Z keyecho: Mechanical keyboard sounds for every keystroke
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1353480Z kkterm: Local-first administration workspace for terminals, SSH, and SFTP
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1353870Z langdock: Platform for AI Adoption
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1354230Z lightcraft: Photo library manager and raw image developer
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1355320Z littlebird: AI assistant that captures meetings and work context
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1355830Z local-studio: Local workstation for running and managing language models
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1356300Z lody: Share coding agent sessions across desktop and mobile
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1356690Z look: Keyboard-first local launcher
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1357170Z mac-performance-monitor: Menu bar performance monitor with recorded history and analytics
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1357610Z macdirstat: Disk space analyser
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1358000Z macshot-offline: Screenshot and screen recording tool without upload integrations
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1358440Z mactoy: Ventoy installer and disk image flasher
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1358810Z magpie: Model gateway for AI coding agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1359390Z mangodisk: Disk cleaner and storage analyser
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1359830Z manus-cue: Personal AI agents with their own identities
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1360220Z markpad: Markdown viewer and editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1360550Z markviewer: Minimal markdown editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1360960Z mcplinker: Manage and sync MCP server configurations across AI clients
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1361500Z mdhero: Markdown viewer and editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1361950Z mindroom: Self-hostable AI stack for multi-user, multi-agent workflows on Matrix
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1362900Z minmaxcal: Minimal menu bar calendar, maximal full-screen notifications
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1363410Z muse: AI assistant for managing tasks, projects, and long-term goals
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1363770Z napari: Multi-dimensional image viewer for Python
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1364130Z nebius: Command-line interface for Nebius
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1366160Z network-weather: Network diagnostics tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1366530Z nextdns-app: Encrypted DNS client with ad and tracker blocking
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1366920Z nextpad++: Unofficial native port of Notepad++
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1369850Z nodeterm: Node-based terminal manager for terminals and coding agents on a canvas
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1370410Z notational-velocity: Store and retrieve notes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1370860Z notomo: Markdown shortcuts, quick actions and AI for Apple Notes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1371340Z nuphyio: Keyboard configurator for NuPhy devices
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1371750Z nvalt: Note taking app, fork of Notational Velocity
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1372160Z nvidia-pair: Local inference router for a group of compatible computers
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1372610Z obelisk: Game launcher for Steam, Epic Games and GOG libraries
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1373060Z oleafly: LaTeX, Typst and Markdown editor for research writing
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1455800Z ollama-binary: Get up and running with large language models locally
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1456220Z omniwm: Tiling window manager
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1456600Z omniwm@canary: Tiling window manager
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1459770Z open-science: AI research workbench with scientific agents and notebooks
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1460770Z openclip: Instant actions for selected text
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1461530Z opencodex: Proxy that connects AI coding agents to other LLM providers
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1461900Z opendisk: Disk space analyser
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1462320Z opendisplay-receiver: Receiver that turns a computer into a second display for OpenDisplay
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1462880Z openframe-console: Desktop client for IT management notifications and sessions
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1463370Z openplc-editor: IDE for creating programs for the OpenPLC Runtime
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1463750Z openscreen: Screen recorder and demo video editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1464020Z pdfcraft: PDF editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1464210Z peel: App uninstaller and disk space cleaner
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1464430Z pen: Agentic design canvas
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1464750Z petal: Multi-window screen sharing where each shared window becomes a native window
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1465130Z photocraft: Image editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1465340Z phtv: Vietnamese input method
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1465670Z picmal: Converts and compresses images, video, audio and PDFs locally
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1466100Z picsart-ai-playground: Workspace for AI image, video and audio creation
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1466530Z plane: Project management tool for tasks, sprints and docs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1466890Z portkiller: Monitor listening ports and kill their processes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1467360Z privacynotes: End-to-end encrypted notes, tasks, files, journal, passwords and bookmark sync
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1467850Z prusaslicer@preview: G-code generator for 3D printers (RepRap, Makerbot, Ultimaker etc.)
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1468410Z psysonic: Desktop client for Navidrome and other Subsonic-compatible servers
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1468830Z pulse: System activity monitor for CPU, memory, GPU, disk and network
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1469180Z purge: Clears caches and junk files by moving them to the Trash
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1469570Z qoder: Agentic coding platform
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1469910Z quarkclouddrive: Cloud storage and file management platform
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1470430Z receipts-space: Organise receipts, invoices and other documents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1470960Z recordly: Creator-focused screen recorder with auto-zoom, cursor effects, and more
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1471480Z relay: Menu bar app for building LLM prompts from files, clipboard and voice notes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1471860Z rencal: Desktop calendar
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1472150Z reolink: Client for viewing and managing security cameras and NVRs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1472500Z rew: Record, visualise and measure audio
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1472790Z robbietilton-compositor: Photoshop alternative
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1473090Z ruffle: Flash Player emulator
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1473350Z ruswitcher: Keyboard layout switcher
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1473720Z sacnview: Tool for monitoring and sending the Streaming ACN lighting control protocol
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1474200Z saega: Dictation and meeting transcription for Swedish and Norwegian
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1474580Z sandisk: Managing SanDisk external drives
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1474860Z screendrop: Screenshot and screen recording tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1475140Z sdrmm-app: Modular, client-server software-defined radio
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1475410Z sidex: Code editor based on VS Code and Tauri
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1475670Z snapline: Screenshot, screen recording and GIF tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1475930Z solidcraft: Parametric 3D CAD modeller
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1476190Z solidtime: Open-source time tracker
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1476570Z sononym: AI-powered sample browser for exploring audio samples
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1476920Z sound-studio: Audio recorder and editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1477190Z soundcraft: Digital audio workstation
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1477530Z spencer: Window and workspace layout manager across Spaces and displays
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1477890Z spotify-soloist: Headless Spotify client
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1478200Z sprites: Command-line interface for Fly.io Sprites
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1478960Z ssl-360: Plugin mixer and control software for SSL 360-enabled hardware
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1479510Z ssl-download-manager: Software manager for SSL plug-ins
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1479790Z stashcat: Secure messenger for organisations
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1480090Z status-trio: Menu bar and Dock monitor for Wi-Fi, battery, and volume
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1480490Z stockbit: Indonesian stock trading and analysis platform
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1480820Z superhuman-docs: Desktop client for team documents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1481070Z swiftcord: Native Discord client
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1481280Z switchbar: Browser and email client picker
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1481510Z sxitch: Tree-based app switcher
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1481720Z tabularis: Lightweight database management tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1482120Z tabularis@nightly: Lightweight database management tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1482490Z taperlabs-shadow: AI meeting notetaker
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1482830Z tapmap: Visualise network connections on an interactive world map
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1483290Z task-manager-tmog: System monitor that identifies resource-heavy processes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1483700Z telari: Markdown reader built for typography
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1484010Z telegram@beta: Messaging app with a focus on speed and security
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1484380Z tencent-yingyongbao: Tencent application store
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1484680Z terminal-browser: Terminal-based web browser
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1485030Z textus: WYSIWYG Markdown editor with built-in AI writing tools
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1485370Z thinkrail: Agentic development environment
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1485640Z threat-dragon: Threat modeling tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1485900Z tine: Outliner for Markdown and Org notes
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1486200Z tinycast: Application launcher and productivity tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1486510Z tldv: AI meeting recorder and note taker
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1486850Z tnas-pc: Desktop client for TerraMaster TNAS network storage devices
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1487320Z token-monitor: Monitor token usage, costs, and limits across AI coding tools
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1487820Z tone3000: Amp modeling plug-in for Neural Amp Modeler captures and impulse responses
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1488340Z tracexy: Inspect network sessions, protocols, processes, and packet evidence
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1488800Z tungsten-edge: Window-oriented taskbar that replaces the Dock
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1489200Z tutti: Workspace for connecting and coordinating AI agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1489530Z vectorcraft: Vector editor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1489760Z vercel: Command-line interface for Vercel
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1490080Z vernier-graphical-analysis: Instrument data analysis tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1490470Z vernier-instrumental-analysis: Instrument data acquisition tool
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1490890Z volumehud: Bring back the pre-Tahoe volume and brightness HUDs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1491220Z waku: Native desktop app for coding agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1491500Z wblock: Ad blocker for Safari
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1491810Z wheelwizard: Mod manager for Mario Kart Wii and Retro Rewind
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1492150Z wordcraft: Word processor
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1492390Z workbuddy-ai: AI agent for everyday office work
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1492730Z workbuddy-cn: AI agent for everyday office work
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1493080Z wsl-manager: Manage native Linux VMs and remote WSL distros
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1493420Z yap-app: On-device voice dictation
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1493670Z zeal: Offline documentation browser
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1494000Z zed-delta: Multiplayer environment for coding with agents
+build-roothide	Install roothide theos	2026-11-05T14:36:52.1494350Z zentty: Terminal for agent-driven development
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8605170Z ^[[34m==>^[[0m ^[[1mOutdated Formulae^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8608350Z ant
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8612500Z aria2
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8623010Z aws-sam-cli
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8623490Z bazelisk
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8634690Z bicep
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8635860Z brotli
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8636370Z c-ares
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8637160Z ca-certificates
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8637460Z cairo
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8647940Z certifi
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8650160Z cffi
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8654930Z cmake
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8668220Z cryptography
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8680950Z curl
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8696700Z expat
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8707810Z freetype
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8713380Z gh
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8715170Z git
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8715620Z git-lfs
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8730510Z glib
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8743620Z gnupg
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8789430Z gradle
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8806150Z gradle-completion
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8829110Z harfbuzz
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8847940Z icu4c@78
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8855640Z jpeg-turbo
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8894390Z kotlin
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8899900Z krb5
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8908400Z libgcrypt
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8916440Z libnghttp2
+build-roothide	Install roothide theos	2026-11-05T14:36:52.8997170Z libnghttp3
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9005180Z libngtcp2
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9010050Z libpng
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9030030Z libpq
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9054710Z libssh2
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9055870Z libunistring
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9056420Z libuv
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9060460Z libx11
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9061010Z libxrender
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9061460Z lz4
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9061910Z maven
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9062810Z node@22
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9063250Z openjdk
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9063810Z openssl@3
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9073700Z pcre2
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9075010Z pipx
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9075740Z pkgconf
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9076210Z pycparser
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9081300Z pydantic
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9081570Z python@3.14
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9081760Z readline
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9082080Z rpds-py
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9082270Z ruby@3.3
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9082480Z rustup
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9083920Z selenium-server
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9096820Z simdjson
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9097090Z simdutf
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9097270Z sqlite
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9097430Z swiftformat
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9097620Z wget
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9097790Z xorgproto
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9097960Z xz
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9098150Z yq
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9098650Z ^[[34m==>^[[0m ^[[1mOutdated Casks^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9098960Z firefox
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9099150Z google-chrome
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9101560Z microsoft-edge
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9101820Z session-manager-plugin
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9101990Z 
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9102270Z You have ^[[1m63^[[0m outdated formulae and ^[[1m4^[[0m outdated casks installed.
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9102680Z You can upgrade them with ^[[1mbrew upgrade^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9103240Z or list them with ^[[1mbrew outdated^[[0m.
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9104150Z ^[[34m==>^[[0m ^[[1mazure-cli has been moved to homebrew/cask.^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:52.9106540Z ^[[34m==>^[[0m ^[[1mbrew unlink azure-cli^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:53.5632440Z ##[warning]Treating azure-cli as a formula. For the cask, use homebrew/cask/azure-cli or specify the `--cask` flag. To silence this message, use the `--formula` flag.
+build-roothide	Install roothide theos	2026-11-05T14:36:53.5789100Z Unlinking /opt/homebrew/Cellar/azure-cli/2.89.1... 4 symlinks removed.
+build-roothide	Install roothide theos	2026-11-05T14:36:53.5890440Z ^[[34m==>^[[0m ^[[1mbrew cleanup^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:36:54.4936530Z ##[warning]Skipping ant: most recent version 1.10.18 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.4957090Z Removing: /Users/runner/Library/Caches/Homebrew/ant--1.10.17... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.4959120Z Removing: /Users/runner/Library/Caches/Homebrew/ant_bottle_manifest--1.10.17... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.4978210Z ##[warning]Skipping aria2: most recent version 1.37.0_3 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5012570Z Removing: /Users/runner/Library/Caches/Homebrew/aria2--1.37.0_2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5014890Z Removing: /Users/runner/Library/Caches/Homebrew/aria2_bottle_manifest--1.37.0_2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5024420Z ##[warning]Skipping aws-sam-cli: most recent version 1.171.0_1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5045540Z Removing: /Users/runner/Library/Caches/Homebrew/aws-sam-cli--1.165.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5046250Z Removing: /Users/runner/Library/Caches/Homebrew/aws-sam-cli_bottle_manifest--1.165.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5047460Z Removing: /Users/runner/Library/Caches/Homebrew/azure-cli--2.89.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5048080Z Removing: /Users/runner/Library/Caches/Homebrew/azure-cli_bottle_manifest--2.89.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5084280Z ##[warning]Skipping bazelisk: most recent version 1.30.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5094390Z Removing: /Users/runner/Library/Caches/Homebrew/bazelisk--1.29.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5101580Z Removing: /Users/runner/Library/Caches/Homebrew/bazelisk_bottle_manifest--1.29.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5103210Z ##[warning]Skipping azure/bicep/bicep: most recent version 0.48.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5104500Z Removing: /Users/runner/Library/Caches/Homebrew/bicep--0.46.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5105390Z ##[warning]Skipping brotli: most recent version 1.2.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5106330Z Removing: /Users/runner/Library/Caches/Homebrew/brotli--1.2.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5106910Z Removing: /Users/runner/Library/Caches/Homebrew/brotli_bottle_manifest--1.2.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5107950Z ##[warning]Skipping c-ares: most recent version 1.34.9 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5108870Z Removing: /Users/runner/Library/Caches/Homebrew/c-ares--1.34.8... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5109440Z Removing: /Users/runner/Library/Caches/Homebrew/c-ares_bottle_manifest--1.34.8... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5110430Z ##[warning]Skipping ca-certificates: most recent version 2026-11-05 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5111370Z Removing: /Users/runner/Library/Caches/Homebrew/ca-certificates--2026-08-13... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5112070Z Removing: /Users/runner/Library/Caches/Homebrew/ca-certificates_bottle_manifest--2026-08-13-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5113070Z ##[warning]Skipping cairo: most recent version 1.18.6 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5113970Z Removing: /Users/runner/Library/Caches/Homebrew/cairo--1.18.4... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5114540Z Removing: /Users/runner/Library/Caches/Homebrew/cairo_bottle_manifest--1.18.4-2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5172160Z Removing: /Users/runner/Library/Caches/Homebrew/carthage--0.40.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5227740Z Removing: /Users/runner/Library/Caches/Homebrew/carthage_bottle_manifest--0.40.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5229370Z ##[warning]Skipping certifi: most recent version 2026.10.23 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5254470Z Removing: /Users/runner/Library/Caches/Homebrew/certifi--2026.7.22... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5259570Z Removing: /Users/runner/Library/Caches/Homebrew/certifi_bottle_manifest--2026.7.22... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5296110Z ##[warning]Skipping cffi: most recent version 2.1.1_1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5298530Z Removing: /Users/runner/Library/Caches/Homebrew/cffi--2.1.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5299190Z Removing: /Users/runner/Library/Caches/Homebrew/cffi_bottle_manifest--2.1.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5300130Z ##[warning]Skipping cmake: most recent version 4.4.5 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5301090Z Removing: /Users/runner/Library/Caches/Homebrew/cmake--4.4.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5302000Z Removing: /Users/runner/Library/Caches/Homebrew/cmake_bottle_manifest--4.4.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5327350Z ##[warning]Skipping cryptography: most recent version 50.0.2_2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5328690Z Removing: /Users/runner/Library/Caches/Homebrew/cryptography--50.0.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5329340Z Removing: /Users/runner/Library/Caches/Homebrew/cryptography_bottle_manifest--50.0.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5330750Z ##[warning]Skipping curl: most recent version 8.23.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5331440Z Removing: /Users/runner/Library/Caches/Homebrew/curl--8.21.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5366130Z Removing: /Users/runner/Library/Caches/Homebrew/curl_bottle_manifest--8.21.0-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5400040Z ##[warning]Skipping expat: most recent version 2.10.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5401340Z Removing: /Users/runner/Library/Caches/Homebrew/expat--2.8.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5401990Z Removing: /Users/runner/Library/Caches/Homebrew/expat_bottle_manifest--2.8.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5403090Z Removing: /Users/runner/Library/Caches/Homebrew/fontconfig--2.18.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5478750Z Removing: /Users/runner/Library/Caches/Homebrew/fontconfig_bottle_manifest--2.18.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5540170Z ##[warning]Skipping freetype: most recent version 2.15.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5587180Z Removing: /Users/runner/Library/Caches/Homebrew/freetype--2.14.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5595170Z Removing: /Users/runner/Library/Caches/Homebrew/freetype_bottle_manifest--2.14.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5757910Z Removing: /Users/runner/Library/Caches/Homebrew/gcc@13--13.4.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5760870Z Removing: /Users/runner/Library/Caches/Homebrew/gcc@13_bottle_manifest--13.4.0-4... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5767090Z Removing: /Users/runner/Library/Caches/Homebrew/gcc@14--14.4.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5768580Z Removing: /Users/runner/Library/Caches/Homebrew/gcc@14_bottle_manifest--14.4.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5803950Z Removing: /Users/runner/Library/Caches/Homebrew/gcc@15--15.3.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5809970Z Removing: /Users/runner/Library/Caches/Homebrew/gcc@15_bottle_manifest--15.3.0-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5810570Z Removing: /Users/runner/Library/Caches/Homebrew/gdbm--1.26... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5811080Z Removing: /Users/runner/Library/Caches/Homebrew/gdbm_bottle_manifest--1.26... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5829030Z Removing: /Users/runner/Library/Caches/Homebrew/geckodriver--0.37.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5830320Z Removing: /Users/runner/Library/Caches/Homebrew/geckodriver_bottle_manifest--0.37.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5845950Z Removing: /Users/runner/Library/Caches/Homebrew/gettext--1.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5847440Z Removing: /Users/runner/Library/Caches/Homebrew/gettext_bottle_manifest--1.0-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5890190Z ##[warning]Skipping gh: most recent version 2.103.3 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5916740Z Removing: /Users/runner/Library/Caches/Homebrew/gh--2.98.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5917930Z Removing: /Users/runner/Library/Caches/Homebrew/gh_bottle_manifest--2.98.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5952550Z Removing: /Users/runner/Library/Caches/Homebrew/giflib--6.1.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5953310Z Removing: /Users/runner/Library/Caches/Homebrew/giflib_bottle_manifest--6.1.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5981300Z ##[warning]Skipping git: most recent version 2.56.0_2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5984390Z Removing: /Users/runner/Library/Caches/Homebrew/git--2.55.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.5989450Z Removing: /Users/runner/Library/Caches/Homebrew/git_bottle_manifest--2.55.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6012350Z ##[warning]Skipping git-lfs: most recent version 3.8.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6017750Z Removing: /Users/runner/Library/Caches/Homebrew/git-lfs--3.8.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6035480Z Removing: /Users/runner/Library/Caches/Homebrew/git-lfs_bottle_manifest--3.8.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6036940Z ##[warning]Skipping glib: most recent version 2.90.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6038270Z Removing: /Users/runner/Library/Caches/Homebrew/glib--2.88.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6038840Z Removing: /Users/runner/Library/Caches/Homebrew/glib_bottle_manifest--2.88.3-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6039390Z Removing: /Users/runner/Library/Caches/Homebrew/gmp--6.3.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6040430Z Removing: /Users/runner/Library/Caches/Homebrew/gmp_bottle_manifest--6.3.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6053460Z Removing: /Users/runner/Library/Caches/Homebrew/gnu-tar--1.35_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6055160Z Removing: /Users/runner/Library/Caches/Homebrew/gnu-tar_bottle_manifest--1.35_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6060100Z ##[warning]Skipping gnupg: most recent version 2.5.24_1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6064980Z Removing: /Users/runner/Library/Caches/Homebrew/gnupg--2.5.21... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6074640Z Removing: /Users/runner/Library/Caches/Homebrew/gnupg_bottle_manifest--2.5.21... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6077450Z Removing: /Users/runner/Library/Caches/Homebrew/gnutls--3.8.13_2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6078000Z Removing: /Users/runner/Library/Caches/Homebrew/gnutls_bottle_manifest--3.8.13_2-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6081300Z ##[warning]Skipping gradle: most recent version 9.8.2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6084200Z Removing: /Users/runner/Library/Caches/Homebrew/gradle--9.7.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6085490Z Removing: /Users/runner/Library/Caches/Homebrew/gradle_bottle_manifest--9.7.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6100060Z ##[warning]Skipping gradle-completion: most recent version 9.8.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6103960Z Removing: /Users/runner/Library/Caches/Homebrew/gradle-completion--9.6.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6126050Z Removing: /Users/runner/Library/Caches/Homebrew/gradle-completion_bottle_manifest--9.6.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6133390Z Removing: /Users/runner/Library/Caches/Homebrew/graphite2--1.3.15... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6137200Z Removing: /Users/runner/Library/Caches/Homebrew/graphite2_bottle_manifest--1.3.15... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6149960Z ##[warning]Skipping harfbuzz: most recent version 15.1.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6152870Z Removing: /Users/runner/Library/Caches/Homebrew/harfbuzz--14.4.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6185070Z Removing: /Users/runner/Library/Caches/Homebrew/harfbuzz_bottle_manifest--14.4.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6188580Z ##[warning]Skipping icu4c@78: most recent version 78.3_1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6292180Z Removing: /Users/runner/Library/Caches/Homebrew/icu4c@78--78.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6335700Z Removing: /Users/runner/Library/Caches/Homebrew/icu4c@78_bottle_manifest--78.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6343790Z Removing: /Users/runner/Library/Caches/Homebrew/isl--0.28... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6344460Z Removing: /Users/runner/Library/Caches/Homebrew/isl_bottle_manifest--0.28... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6346120Z ##[warning]Skipping jpeg-turbo: most recent version 3.2.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6349850Z Removing: /Users/runner/Library/Caches/Homebrew/jpeg-turbo--3.2.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6371140Z Removing: /Users/runner/Library/Caches/Homebrew/jpeg-turbo_bottle_manifest--3.2.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6372130Z Removing: /Users/runner/Library/Caches/Homebrew/jq--1.8.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6372580Z Removing: /Users/runner/Library/Caches/Homebrew/jq_bottle_manifest--1.8.2-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6373040Z Removing: /Users/runner/Library/Caches/Homebrew/json-c--0.19... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6373520Z Removing: /Users/runner/Library/Caches/Homebrew/json-c_bottle_manifest--0.19... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6374740Z ##[warning]Skipping kotlin: most recent version 2.4.21 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6375840Z Removing: /Users/runner/Library/Caches/Homebrew/kotlin--2.4.10... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6376460Z Removing: /Users/runner/Library/Caches/Homebrew/kotlin_bottle_manifest--2.4.10... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6377340Z ##[warning]Skipping krb5: most recent version 1.22.2_2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6378130Z Removing: /Users/runner/Library/Caches/Homebrew/krb5--1.22.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6378930Z Removing: /Users/runner/Library/Caches/Homebrew/krb5_bottle_manifest--1.22.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6379490Z Removing: /Users/runner/Library/Caches/Homebrew/libassuan--3.0.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6380020Z Removing: /Users/runner/Library/Caches/Homebrew/libassuan_bottle_manifest--3.0.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6380990Z ##[warning]Skipping libgcrypt: most recent version 1.12.4 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6381900Z Removing: /Users/runner/Library/Caches/Homebrew/libgcrypt--1.12.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6408110Z Removing: /Users/runner/Library/Caches/Homebrew/libgcrypt_bottle_manifest--1.12.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6469230Z Removing: /Users/runner/Library/Caches/Homebrew/libgpg-error--1.61... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6550590Z Removing: /Users/runner/Library/Caches/Homebrew/libgpg-error_bottle_manifest--1.61... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6624880Z Removing: /Users/runner/Library/Caches/Homebrew/libidn2--2.3.8... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6680250Z Removing: /Users/runner/Library/Caches/Homebrew/libidn2_bottle_manifest--2.3.8... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6683090Z Removing: /Users/runner/Library/Caches/Homebrew/libksba--1.8.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6684660Z Removing: /Users/runner/Library/Caches/Homebrew/libksba_bottle_manifest--1.8.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6781410Z Removing: /Users/runner/Library/Caches/Homebrew/libmpc--1.4.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6784040Z Removing: /Users/runner/Library/Caches/Homebrew/libmpc_bottle_manifest--1.4.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6788960Z ##[warning]Skipping libnghttp2: most recent version 1.71.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6802140Z Removing: /Users/runner/Library/Caches/Homebrew/libnghttp2--1.70.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6802870Z Removing: /Users/runner/Library/Caches/Homebrew/libnghttp2_bottle_manifest--1.70.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6804650Z ##[warning]Skipping libnghttp3: most recent version 1.19.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6805670Z Removing: /Users/runner/Library/Caches/Homebrew/libnghttp3--1.18.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6806210Z Removing: /Users/runner/Library/Caches/Homebrew/libnghttp3_bottle_manifest--1.18.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6807200Z ##[warning]Skipping libngtcp2: most recent version 1.26.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6939940Z Removing: /Users/runner/Library/Caches/Homebrew/libngtcp2--1.25.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6961150Z Removing: /Users/runner/Library/Caches/Homebrew/libngtcp2_bottle_manifest--1.25.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6964330Z ##[warning]Skipping libpng: most recent version 1.6.59 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6967490Z Removing: /Users/runner/Library/Caches/Homebrew/libpng--1.6.58... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6968270Z Removing: /Users/runner/Library/Caches/Homebrew/libpng_bottle_manifest--1.6.58... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6969740Z ##[warning]Skipping libpq: most recent version 18.6_2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6970830Z Removing: /Users/runner/Library/Caches/Homebrew/libpq--18.6... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.6971420Z Removing: /Users/runner/Library/Caches/Homebrew/libpq_bottle_manifest--18.6... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7053200Z Removing: /Users/runner/Library/Caches/Homebrew/libpsl--0.23.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7122040Z Removing: /Users/runner/Library/Caches/Homebrew/libpsl_bottle_manifest--0.23.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7124450Z Removing: /Users/runner/Library/Caches/Homebrew/libsodium--1.0.22... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7232520Z Removing: /Users/runner/Library/Caches/Homebrew/libsodium_bottle_manifest--1.0.22... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7272310Z ##[warning]Skipping libssh2: most recent version 1.11.1_7 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7278030Z Removing: /Users/runner/Library/Caches/Homebrew/libssh2--1.11.1_4... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7542340Z Removing: /Users/runner/Library/Caches/Homebrew/libssh2_bottle_manifest--1.11.1_4... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7548250Z Removing: /Users/runner/Library/Caches/Homebrew/libtasn1--4.21.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7548930Z Removing: /Users/runner/Library/Caches/Homebrew/libtasn1_bottle_manifest--4.21.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7574920Z Removing: /Users/runner/Library/Caches/Homebrew/libtiff--4.7.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7575830Z Removing: /Users/runner/Library/Caches/Homebrew/libtiff_bottle_manifest--4.7.2-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7587490Z ##[warning]Skipping libunistring: most recent version 1.5 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7589630Z Removing: /Users/runner/Library/Caches/Homebrew/libunistring--1.4.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7593600Z Removing: /Users/runner/Library/Caches/Homebrew/libunistring_bottle_manifest--1.4.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7612490Z Removing: /Users/runner/Library/Caches/Homebrew/libusb--1.0.30... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7737930Z Removing: /Users/runner/Library/Caches/Homebrew/libusb_bottle_manifest--1.0.30... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7791740Z ##[warning]Skipping libuv: most recent version 1.53.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7794270Z Removing: /Users/runner/Library/Caches/Homebrew/libuv--1.52.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7798640Z Removing: /Users/runner/Library/Caches/Homebrew/libuv_bottle_manifest--1.52.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.7920480Z ##[warning]Skipping libx11: most recent version 1.8.14 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8025130Z Removing: /Users/runner/Library/Caches/Homebrew/libx11--1.8.13... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8138160Z Removing: /Users/runner/Library/Caches/Homebrew/libx11_bottle_manifest--1.8.13... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8156890Z Removing: /Users/runner/Library/Caches/Homebrew/libxau--1.0.12... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8176100Z Removing: /Users/runner/Library/Caches/Homebrew/libxau_bottle_manifest--1.0.12... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8208700Z Removing: /Users/runner/Library/Caches/Homebrew/libxcb--1.17.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8209400Z Removing: /Users/runner/Library/Caches/Homebrew/libxcb_bottle_manifest--1.17.0-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8209940Z Removing: /Users/runner/Library/Caches/Homebrew/libxdmcp--1.1.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8210490Z Removing: /Users/runner/Library/Caches/Homebrew/libxdmcp_bottle_manifest--1.1.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8210990Z Removing: /Users/runner/Library/Caches/Homebrew/libxext--1.3.7... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8211590Z Removing: /Users/runner/Library/Caches/Homebrew/libxext_bottle_manifest--1.3.7... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8212710Z ##[warning]Skipping libxrender: most recent version 0.9.13 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8213750Z Removing: /Users/runner/Library/Caches/Homebrew/libxrender--0.9.12... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8214260Z Removing: /Users/runner/Library/Caches/Homebrew/libxrender_bottle_manifest--0.9.12... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8214830Z Removing: /Users/runner/Library/Caches/Homebrew/libyaml--0.2.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8215350Z Removing: /Users/runner/Library/Caches/Homebrew/libyaml_bottle_manifest--0.2.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8215890Z Removing: /Users/runner/Library/Caches/Homebrew/little-cms2--2.19.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8216420Z Removing: /Users/runner/Library/Caches/Homebrew/little-cms2_bottle_manifest--2.19.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8217070Z Removing: /Users/runner/Library/Caches/Homebrew/llvm@15--15.0.7... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8217630Z Removing: /Users/runner/Library/Caches/Homebrew/llvm@15_bottle_manifest--15.0.7-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8218660Z ##[warning]Skipping lz4: most recent version 1.11.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8221660Z Removing: /Users/runner/Library/Caches/Homebrew/lz4--1.10.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8382790Z Removing: /Users/runner/Library/Caches/Homebrew/lz4_bottle_manifest--1.10.0-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8398450Z Removing: /Users/runner/Library/Caches/Homebrew/lzo--2.10... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8459120Z Removing: /Users/runner/Library/Caches/Homebrew/lzo_bottle_manifest--2.10... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8461230Z ##[warning]Skipping maven: most recent version 3.10.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8462680Z Removing: /Users/runner/Library/Caches/Homebrew/maven--3.9.16... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8463430Z Removing: /Users/runner/Library/Caches/Homebrew/maven_bottle_manifest--3.9.16... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8464490Z Removing: /Users/runner/Library/Caches/Homebrew/mpdecimal--4.0.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8465250Z Removing: /Users/runner/Library/Caches/Homebrew/mpdecimal_bottle_manifest--4.0.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8466620Z Removing: /Users/runner/Library/Caches/Homebrew/mpfr--4.2.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8484370Z Removing: /Users/runner/Library/Caches/Homebrew/mpfr_bottle_manifest--4.2.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8517950Z Removing: /Users/runner/Library/Caches/Homebrew/nettle--4.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8535080Z Removing: /Users/runner/Library/Caches/Homebrew/nettle_bottle_manifest--4.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8536520Z Removing: /Users/runner/Library/Caches/Homebrew/ninja--1.13.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8537180Z Removing: /Users/runner/Library/Caches/Homebrew/ninja_bottle_manifest--1.13.2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8540190Z ##[warning]Skipping node@22: most recent version 22.23.4_2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8542760Z Removing: /Users/runner/Library/Caches/Homebrew/node@22--22.23.2_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8545420Z Removing: /Users/runner/Library/Caches/Homebrew/node@22_bottle_manifest--22.23.2_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8546560Z Removing: /Users/runner/Library/Caches/Homebrew/npth--1.8... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8601690Z Removing: /Users/runner/Library/Caches/Homebrew/npth_bottle_manifest--1.8... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8625310Z Removing: /Users/runner/Library/Caches/Homebrew/oniguruma--6.9.10... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8630410Z Removing: /Users/runner/Library/Caches/Homebrew/oniguruma_bottle_manifest--6.9.10... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8643410Z ##[warning]Skipping openjdk: most recent version 27.0.1.0.3 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8646520Z Removing: /Users/runner/Library/Caches/Homebrew/openjdk--26.0.2.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8662530Z Removing: /Users/runner/Library/Caches/Homebrew/openjdk_bottle_manifest--26.0.2.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8671680Z Removing: /Users/runner/Library/Caches/Homebrew/openssl@1.1--1.1.1w... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8673280Z Removing: /Users/runner/Library/Caches/Homebrew/openssl@1.1_bottle_manifest--1.1.1w... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8684770Z ##[warning]Skipping openssl@3: most recent version 3.5.9 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8692290Z Removing: /Users/runner/Library/Caches/Homebrew/openssl@3--3.6.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8707280Z Removing: /Users/runner/Library/Caches/Homebrew/openssl@3_bottle_manifest--3.6.3-2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8708020Z Removing: /Users/runner/Library/Caches/Homebrew/p11-kit--0.26.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8708600Z Removing: /Users/runner/Library/Caches/Homebrew/p11-kit_bottle_manifest--0.26.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8721290Z Removing: /Users/runner/Library/Caches/Homebrew/p7zip--17.06... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8723570Z Removing: /Users/runner/Library/Caches/Homebrew/p7zip_bottle_manifest--17.06... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8757340Z Removing: /Users/runner/Library/Caches/Homebrew/packer--1.16.0.zip... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8769900Z ##[warning]Skipping pcre2: most recent version 10.49 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8779760Z Removing: /Users/runner/Library/Caches/Homebrew/pcre2--10.47_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8787790Z Removing: /Users/runner/Library/Caches/Homebrew/pcre2_bottle_manifest--10.47_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8788600Z Removing: /Users/runner/Library/Caches/Homebrew/perl--5.44.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8789100Z Removing: /Users/runner/Library/Caches/Homebrew/perl_bottle_manifest--5.44.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8811190Z Removing: /Users/runner/Library/Caches/Homebrew/pinentry--1.3.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8823260Z Removing: /Users/runner/Library/Caches/Homebrew/pinentry_bottle_manifest--1.3.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8830330Z ##[warning]Skipping pipx: most recent version 1.18.13 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8834080Z Removing: /Users/runner/Library/Caches/Homebrew/pipx--1.16.7... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8835440Z Removing: /Users/runner/Library/Caches/Homebrew/pipx_bottle_manifest--1.16.7... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8837530Z Removing: /Users/runner/Library/Caches/Homebrew/pixman--0.46.4... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8838900Z Removing: /Users/runner/Library/Caches/Homebrew/pixman_bottle_manifest--0.46.4-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8843790Z ##[warning]Skipping pkgconf: most recent version 3.0.10 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8847720Z Removing: /Users/runner/Library/Caches/Homebrew/pkgconf--3.0.6... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8857590Z Removing: /Users/runner/Library/Caches/Homebrew/pkgconf_bottle_manifest--3.0.6-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8858800Z ##[warning]Skipping pycparser: most recent version 3.12 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8875360Z Removing: /Users/runner/Library/Caches/Homebrew/pycparser--3.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8878710Z Removing: /Users/runner/Library/Caches/Homebrew/pycparser_bottle_manifest--3.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8879780Z ##[warning]Skipping pydantic: most recent version 2.14.2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8880890Z Removing: /Users/runner/Library/Caches/Homebrew/pydantic--2.13.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8888770Z Removing: /Users/runner/Library/Caches/Homebrew/pydantic_bottle_manifest--2.13.5... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8890410Z ##[warning]Skipping python@3.14: most recent version 3.14.10 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8891290Z Removing: /Users/runner/Library/Caches/Homebrew/python@3.14--3.14.7... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8891790Z Removing: /Users/runner/Library/Caches/Homebrew/python@3.14_bottle_manifest--3.14.7... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8900680Z ##[warning]Skipping readline: most recent version 8.3.6 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8903150Z Removing: /Users/runner/Library/Caches/Homebrew/readline--8.3.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8904550Z Removing: /Users/runner/Library/Caches/Homebrew/readline_bottle_manifest--8.3.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8912630Z ##[warning]Skipping rpds-py: most recent version 2026.9.1_1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8913580Z Removing: /Users/runner/Library/Caches/Homebrew/rpds-py--2026.6.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8923990Z Removing: /Users/runner/Library/Caches/Homebrew/rpds-py_bottle_manifest--2026.6.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8934270Z ##[warning]Skipping ruby@3.3: most recent version 3.3.13 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8936840Z Removing: /Users/runner/Library/Caches/Homebrew/ruby@3.3--3.3.12... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8944130Z Removing: /Users/runner/Library/Caches/Homebrew/ruby@3.3_bottle_manifest--3.3.12... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8949760Z ##[warning]Skipping rustup: most recent version 1.29.3 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8951990Z Removing: /Users/runner/Library/Caches/Homebrew/rustup--1.29.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8956420Z Removing: /Users/runner/Library/Caches/Homebrew/rustup_bottle_manifest--1.29.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8961830Z ##[warning]Skipping selenium-server: most recent version 4.52.0 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8965340Z Removing: /Users/runner/Library/Caches/Homebrew/selenium-server--4.48.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8966870Z Removing: /Users/runner/Library/Caches/Homebrew/selenium-server_bottle_manifest--4.48.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8970650Z ##[warning]Skipping simdjson: most recent version 5.1.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8972850Z Removing: /Users/runner/Library/Caches/Homebrew/simdjson--4.6.9... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8977080Z Removing: /Users/runner/Library/Caches/Homebrew/simdjson_bottle_manifest--4.6.9... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8978170Z ##[warning]Skipping simdutf: most recent version 9.3.3 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8979090Z Removing: /Users/runner/Library/Caches/Homebrew/simdutf--9.1.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8979650Z Removing: /Users/runner/Library/Caches/Homebrew/simdutf_bottle_manifest--9.1.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8986130Z ##[warning]Skipping sqlite: most recent version 3.54.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8988820Z Removing: /Users/runner/Library/Caches/Homebrew/sqlite--3.53.4... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.8994710Z Removing: /Users/runner/Library/Caches/Homebrew/sqlite_bottle_manifest--3.53.4-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9009520Z ##[warning]Skipping swiftformat: most recent version 0.64.5 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9012630Z Removing: /Users/runner/Library/Caches/Homebrew/swiftformat--0.63.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9014070Z Removing: /Users/runner/Library/Caches/Homebrew/swiftformat_bottle_manifest--0.63.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9027500Z Removing: /Users/runner/Library/Caches/Homebrew/tcl-tk@8--8.6.18... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9047110Z Removing: /Users/runner/Library/Caches/Homebrew/tcl-tk@8_bottle_manifest--8.6.18... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9053150Z Removing: /Users/runner/Library/Caches/Homebrew/unxip--3.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9055720Z Removing: /Users/runner/Library/Caches/Homebrew/unxip_bottle_manifest--3.3-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9156650Z Removing: /Users/runner/Library/Caches/Homebrew/uvwasi--0.0.23... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9295550Z Removing: /Users/runner/Library/Caches/Homebrew/uvwasi_bottle_manifest--0.0.23-1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9324410Z Removing: /Users/runner/Library/Caches/Homebrew/webp--1.6.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9338650Z Removing: /Users/runner/Library/Caches/Homebrew/webp_bottle_manifest--1.6.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9351720Z ##[warning]Skipping wget: most recent version 1.25.0_2 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9354220Z Removing: /Users/runner/Library/Caches/Homebrew/wget--1.25.0... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9355750Z Removing: /Users/runner/Library/Caches/Homebrew/wget_bottle_manifest--1.25.0-2... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9377840Z Removing: /Users/runner/Library/Caches/Homebrew/xcbeautify--3.2.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9380000Z Removing: /Users/runner/Library/Caches/Homebrew/xcbeautify_bottle_manifest--3.2.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9394200Z ##[warning]Skipping xorgproto: most recent version 2026.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9397810Z Removing: /Users/runner/Library/Caches/Homebrew/xorgproto--2025.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9399290Z Removing: /Users/runner/Library/Caches/Homebrew/xorgproto_bottle_manifest--2025.1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9416800Z ##[warning]Skipping xz: most recent version 5.8.4 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9431290Z Removing: /Users/runner/Library/Caches/Homebrew/xz--5.8.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9432650Z Removing: /Users/runner/Library/Caches/Homebrew/xz_bottle_manifest--5.8.3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9445800Z ##[warning]Skipping yq: most recent version 4.54.1 not installed
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9446820Z Removing: /Users/runner/Library/Caches/Homebrew/yq--4.53.6... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9447300Z Removing: /Users/runner/Library/Caches/Homebrew/yq_bottle_manifest--4.53.6... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9466530Z Removing: /Users/runner/Library/Caches/Homebrew/zstd--1.5.7_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:54.9474610Z Removing: /Users/runner/Library/Caches/Homebrew/zstd_bottle_manifest--1.5.7_1... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.0797420Z Removing: /Users/runner/Library/Caches/Homebrew/expect--5.45.4_3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.0901770Z Removing: /Users/runner/Library/Caches/Homebrew/expect_bottle_manifest--5.45.4_3... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.1003250Z Removing: /Users/runner/Library/Caches/Homebrew/Cask/firefox--154.0.1.dmg... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.1105770Z Removing: /Users/runner/Library/Caches/Homebrew/Cask/microsoft-edge--152.0.4191.53,5978bacb-e3c1-46e9-bacf-09e801724fab.dmg... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.1131890Z Removing: /Users/runner/Library/Caches/Homebrew/Cask/session-manager-plugin--1.2.835.0.pkg... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.1143040Z Removing: /Users/runner/Library/Caches/Homebrew/Cask/google-chrome--152.0.7977.65.dmg... (0B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.2795110Z Removing: /Users/runner/Library/Caches/Homebrew/bootsnap/cbcc7a28608961f53179008c4df6fbdd0012109a271c795809dd4641a0f4d195... (1,070 files, 9.8MB)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.4939990Z Removing: /Users/runner/Library/Logs/Homebrew/python@3.14... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5041540Z Removing: /Users/runner/Library/Logs/Homebrew/glib... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5144380Z Removing: /Users/runner/Library/Logs/Homebrew/fontconfig... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5157740Z Removing: /Users/runner/Library/Logs/Homebrew/rustup... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5159500Z Removing: /Users/runner/Library/Logs/Homebrew/gcc@14... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5161270Z Removing: /Users/runner/Library/Logs/Homebrew/gcc@13... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5162440Z Removing: /Users/runner/Library/Logs/Homebrew/gcc@15... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5163550Z Removing: /Users/runner/Library/Logs/Homebrew/openssl@3... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5165160Z Removing: /Users/runner/Library/Logs/Homebrew/ca-certificates... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5168420Z Removing: /Users/runner/Library/Logs/Homebrew/openssl@1.1... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5169480Z Removing: /Users/runner/Library/Logs/Homebrew/bicep... (113B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5174680Z Removing: /Users/runner/Library/Logs/Homebrew/gnupg... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5175860Z Removing: /Users/runner/Library/Logs/Homebrew/gnutls... (64B)
+build-roothide	Install roothide theos	2026-11-05T14:36:55.5176960Z Removing: /Users/runner/Library/Logs/Homebrew/packer... (116B)
+build-roothide	Install roothide theos	2026-11-05T14:37:07.5616880Z Pruned 3 symbolic links and 11 directories from /opt/homebrew
+build-roothide	Install roothide theos	2026-11-05T14:37:11.3059590Z Removing: /opt/homebrew/Library/Homebrew/vendor/portable-ruby/4.0.6... (1,707 files, 34.6MB)
+build-roothide	Install roothide theos	2026-11-05T14:37:11.4752400Z ^[[34m==>^[[0m ^[[1mThis operation has freed approximately 44.4MB of disk space.^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:11.5148730Z ^[[34m==>^[[0m ^[[1mbrew install --cask homebrew/cask/azure-cli^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:12.8712380Z ^[[34m==>^[[0m ^[[1mWould install 1 cask:^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:12.8717070Z azure-cli
+build-roothide	Install roothide theos	2026-11-05T14:37:12.8720540Z ^[[34m==>^[[0m ^[[1mWould install 8 dependencies for azure-cli:^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:12.8721860Z python@3.14 ca-certificates openssl@4 readline sqlite xz lz4 expat
+build-roothide	Install roothide theos	2026-11-05T14:37:12.9017650Z ##[warning]You are using macOS 14.
+build-roothide	Install roothide theos	We (and Apple) do not provide support for this old version.
+build-roothide	Install roothide theos	
+build-roothide	Install roothide theos	Homebrew no longer builds bottles for this configuration.
+build-roothide	Install roothide theos	Consider MacPorts, which provides binary packages for this macOS version:
+build-roothide	Install roothide theos	  https://www.macports.org
+build-roothide	Install roothide theos	2026-11-05T14:37:23.8555970Z ^[[32m==>^[[0m ^[[1mFetching downloads for: ^[[32mazure-cli^[[39m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:33.9555700Z ✔︎ Cask azure-cli (2.92.0)
+build-roothide	Install roothide theos	2026-11-05T14:37:45.7333690Z ^[[32m==>^[[0m ^[[1mFetching dependency downloads^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:45.7336210Z ✔︎ API Source openssl@4.rb
+build-roothide	Install roothide theos	2026-11-05T14:37:45.7336810Z ✔︎ Bottle Manifest ca-certificates (2026-11-05)
+build-roothide	Install roothide theos	2026-11-05T14:37:45.7337850Z ✔︎ Bottle ca-certificates (2026-11-05)
+build-roothide	Install roothide theos	2026-11-05T14:37:46.2323190Z ✔︎ Formula openssl@4 (4.1.0)
+build-roothide	Install roothide theos	2026-11-05T14:37:46.2434770Z ^[[34m==>^[[0m ^[[1mInstalling dependencies: openssl@4^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:46.7772880Z ^[[32m==>^[[0m ^[[1mUpgrading openssl@4 dependency: ^[[32mca-certificates^[[39m (2026-08-13 -> 2026-11-05)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:37:46.7830260Z ^[[34m==>^[[0m ^[[1mPouring ca-certificates--2026-11-05.all.bottle.tar.gz^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:38:01.4707640Z 🍺  /opt/homebrew/Cellar/ca-certificates/2026-11-05: 5 files, 194.7KB
+build-roothide	Install roothide theos	2026-11-05T14:38:01.4723920Z ^[[32m==>^[[0m ^[[1mInstalling ^[[32mopenssl@4^[[39m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:38:08.0282950Z ^[[34m==>^[[0m ^[[1mperl ./Configure --prefix=/opt/homebrew/Cellar/openssl@4/4.1.0 --openssldir=^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:38:22.1317070Z ^[[34m==>^[[0m ^[[1mmake^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:08.9402700Z ^[[34m==>^[[0m ^[[1mmake install MANDIR=/opt/homebrew/Cellar/openssl@4/4.1.0/share/man MANSUFFIX^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:28.7543900Z Unlinking /opt/homebrew/Cellar/openssl@3/3.6.3... 6565 symlinks removed.
+build-roothide	Install roothide theos	2026-11-05T14:41:29.9890190Z ##[warning]These files were overwritten during the `brew link` step:
+build-roothide	Install roothide theos	2026-11-05T14:41:29.9892370Z /opt/homebrew/bin/openssl
+build-roothide	Install roothide theos	2026-11-05T14:41:29.9892740Z 
+build-roothide	Install roothide theos	2026-11-05T14:41:29.9893210Z They have been backed up to: /Users/runner/Library/Caches/Homebrew/Backup
+build-roothide	Install roothide theos	2026-11-05T14:41:32.2008560Z ^[[34m==>^[[0m ^[[1mSummary^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.2948610Z 🍺  /opt/homebrew/Cellar/openssl@4/4.1.0: 6,860 files, 24.5MB, built in 3 minutes 30 seconds
+build-roothide	Install roothide theos	2026-11-05T14:41:32.2950160Z ^[[32m==>^[[0m ^[[1mInstalling Cask ^[[32mazure-cli^[[39m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.2988200Z ^[[34m==>^[[0m ^[[1mLinking Binary 'az' to '/opt/homebrew/bin/az'^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3120680Z ^[[34m==>^[[0m ^[[1mLinking Bash Completion 'az' to '/opt/homebrew/etc/bash_completion.d/az'^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3198200Z ^[[34m==>^[[0m ^[[1mLinking Zsh Completion '_az' to '/opt/homebrew/share/zsh/site-functions/_az'^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3346640Z ^[[34m==>^[[0m ^[[1mLinking Fish Completion 'az.fish' to '/opt/homebrew/share/fish/vendor_completions.d/az.fish'^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3473170Z 🍺  azure-cli was successfully installed!
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3478430Z 
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3479040Z This is a Tier 3 configuration:
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3479930Z   ^[[4mhttps://docs.brew.sh/Support-Tiers#tier-3^[[24m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3481290Z ^[[1mYou can report issues with Tier 3 configurations to Homebrew/* repositories!^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3482320Z   
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3483070Z Read the above document before opening any issues or PRs.
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3657380Z ^[[34m==>^[[0m ^[[1mazure-cli has been moved to homebrew/cask.^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3658360Z The existing keg has been unlinked.
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3659250Z Please uninstall the formula when convenient by running:
+build-roothide	Install roothide theos	2026-11-05T14:41:32.3673170Z   brew uninstall --formula --force azure-cli
+build-roothide	Install roothide theos	2026-11-05T14:41:35.4663350Z xz 5.8.3 is already installed but outdated (so it will be upgraded).
+build-roothide	Install roothide theos	2026-11-05T14:41:35.5161770Z ##[warning]You are using macOS 14.
+build-roothide	Install roothide theos	We (and Apple) do not provide support for this old version.
+build-roothide	Install roothide theos	
+build-roothide	Install roothide theos	Homebrew no longer builds bottles for this configuration.
+build-roothide	Install roothide theos	Consider MacPorts, which provides binary packages for this macOS version:
+build-roothide	Install roothide theos	  https://www.macports.org
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1907570Z ^[[34m==>^[[0m ^[[1mWould install 1 formula:^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1908010Z ldid 2.1.5_2
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1908570Z ^[[34m==>^[[0m ^[[1mWould upgrade 1 formula:^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1913240Z xz 5.8.3 -> 5.8.4
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1937590Z ^[[34m==>^[[0m ^[[1mWould install 5 dependencies for ldid:^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1938680Z m4        1.4.21
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1939490Z autoconf  2.73
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1940410Z automake  1.19
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1941500Z libtool   2.6.2
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1942460Z libplist  2.8.0
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1943480Z ^[[34m==>^[[0m ^[[1mWould upgrade 2 dependencies for ldid:^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1945100Z pkgconf    3.0.6 -> 3.0.10
+build-roothide	Install roothide theos	2026-11-05T14:41:36.1945540Z openssl@3  3.6.3 -> 3.5.9
+build-roothide	Install roothide theos	2026-11-05T14:41:37.4189290Z ^[[34m==>^[[0m ^[[1mDownloading https://raw.githubusercontent.com/Homebrew/homebrew-core/ebdd93c608b7047e1eb367b9771c9b4ad55b8865/Formula/a/automake.rb^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:37.4221360Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/59e9df8975bc0d418ac0511d68cf1a79d751252f7e8c0963e13614c2e24e8d03--automake.rb
+build-roothide	Install roothide theos	2026-11-05T14:41:40.5360910Z ^[[34m==>^[[0m ^[[1mDownloading https://raw.githubusercontent.com/Homebrew/homebrew-core/ebdd93c608b7047e1eb367b9771c9b4ad55b8865/Formula/p/pkgconf.rb^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:40.5366160Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/dd77ec789a86fb1a17efc5f384288f3122376e7aad1fdf58a67695588f269f73--pkgconf.rb
+build-roothide	Install roothide theos	2026-11-05T14:41:41.4690720Z ^[[34m==>^[[0m ^[[1mDownloading https://raw.githubusercontent.com/Homebrew/homebrew-core/ebdd93c608b7047e1eb367b9771c9b4ad55b8865/Formula/lib/libplist.rb^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:41.4793920Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/5e97c8f69cda4986ca7b447e3cdc3e969278197a513d25fc79f0ba441dd92c4c--libplist.rb
+build-roothide	Install roothide theos	2026-11-05T14:41:52.2563920Z ^[[34m==>^[[0m ^[[1mDownloading https://raw.githubusercontent.com/Homebrew/homebrew-core/ebdd93c608b7047e1eb367b9771c9b4ad55b8865/Formula/o/openssl@3.rb^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:41:52.2667860Z Already downloaded: /Users/runner/Library/Caches/Homebrew/downloads/927f994b10d836a8630dca3f4daa3b2f0ee7a52b826bdf960d28641eb56fcfcc--openssl@3.rb
+build-roothide	Install roothide theos	2026-11-05T14:42:09.5993280Z ^[[32m==>^[[0m ^[[1mFetching downloads for: ^[[32mldid^[[39m and ^[[32mxz^[[39m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6390850Z ✔︎ API Source ldid.rb
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6392750Z ✔︎ API Source xz.rb
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6395780Z ✔︎ Bottle Manifest m4 (1.4.21)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6396260Z ✔︎ Bottle m4 (1.4.21)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6397020Z ✔︎ Bottle Manifest autoconf (2.73)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6398550Z ✔︎ Bottle autoconf (2.73)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6399970Z ✔︎ API Source automake.rb
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6401090Z ✔︎ Formula automake (1.19)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6402260Z ✔︎ Bottle Manifest libtool (2.6.2)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6403240Z ✔︎ Bottle libtool (2.6.2)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6403760Z ✔︎ API Source pkgconf.rb
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6404860Z ✔︎ Formula pkgconf (3.0.10)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6405480Z ✔︎ API Source libplist.rb
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6406080Z ✔︎ Formula libplist (2.8.0)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6406710Z ✔︎ API Source openssl@3.rb
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6407440Z ✔︎ Formula openssl@3 (3.5.9)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.6408530Z ✔︎ Formula ldid (2.1.5)
+build-roothide	Install roothide theos	2026-11-05T14:42:09.7699250Z ✔︎ Formula xz (5.8.4)
+build-roothide	Install roothide theos	2026-11-05T14:42:10.0551860Z ^[[32m==>^[[0m ^[[1mInstalling dependencies for ldid:^[[0m ^[[32mm4^[[39m, ^[[32mautoconf^[[39m, ^[[32mautomake^[[39m, ^[[32mlibtool^[[39m, ^[[32mpkgconf^[[39m, ^[[32mlibplist^[[39m and ^[[32mopenssl@3^[[39m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:10.0553360Z ^[[32m==>^[[0m ^[[1mInstalling ldid dependency: ^[[32mm4^[[39m (1.4.21)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:10.0605110Z ^[[34m==>^[[0m ^[[1mPouring m4--1.4.21.arm64_sonoma.bottle.tar.gz^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:11.1572300Z 🍺  /opt/homebrew/Cellar/m4/1.4.21: 14 files, 814.5KB
+build-roothide	Install roothide theos	2026-11-05T14:42:11.1580370Z ^[[32m==>^[[0m ^[[1mInstalling ldid dependency: ^[[32mautoconf^[[39m (2.73)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:11.1657690Z ^[[34m==>^[[0m ^[[1mPouring autoconf--2.73.arm64_sonoma.bottle.tar.gz^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:12.2746260Z 🍺  /opt/homebrew/Cellar/autoconf/2.73: 73 files, 3.8MB
+build-roothide	Install roothide theos	2026-11-05T14:42:12.2750510Z ^[[32m==>^[[0m ^[[1mInstalling ldid dependency: ^[[32mautomake^[[39m (1.19)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:15.1633780Z ^[[34m==>^[[0m ^[[1m./configure --sysconfdir=/opt/homebrew/etc --localstatedir=/opt/homebrew/var^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:23.0503900Z ^[[34m==>^[[0m ^[[1mmake install^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:26.5956340Z 🍺  /opt/homebrew/Cellar/automake/1.19: 135 files, 3.6MB, built in 14 seconds
+build-roothide	Install roothide theos	2026-11-05T14:42:26.5959180Z ^[[32m==>^[[0m ^[[1mInstalling ldid dependency: ^[[32mlibtool^[[39m (2.6.2)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:26.6047930Z ^[[34m==>^[[0m ^[[1mPouring libtool--2.6.2.arm64_sonoma.bottle.tar.gz^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:28.6843490Z 🍺  /opt/homebrew/Cellar/libtool/2.6.2: 78 files, 4.2MB
+build-roothide	Install roothide theos	2026-11-05T14:42:28.7241150Z ^[[32m==>^[[0m ^[[1mUpgrading ldid dependency: ^[[32mpkgconf^[[39m (3.0.6 -> 3.0.10)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:30.5918580Z ^[[34m==>^[[0m ^[[1m./configure --disable-silent-rules --with-pkg-config-dir=/opt/homebrew/lib/p^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:41.4211470Z ^[[34m==>^[[0m ^[[1mmake^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:47.1522340Z ^[[34m==>^[[0m ^[[1mmake install^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:48.7811040Z 🍺  /opt/homebrew/Cellar/pkgconf/3.0.10: 35 files, 752.4KB, built in 19 seconds
+build-roothide	Install roothide theos	2026-11-05T14:42:48.7819630Z ^[[32m==>^[[0m ^[[1mInstalling ldid dependency: ^[[32mlibplist^[[39m (2.8.0)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:42:50.1770080Z ^[[34m==>^[[0m ^[[1m./configure --disable-silent-rules --without-cython^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:43:00.2961240Z ^[[34m==>^[[0m ^[[1mmake^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:43:17.0486690Z ^[[34m==>^[[0m ^[[1mmake install^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:43:18.5335690Z 🍺  /opt/homebrew/Cellar/libplist/2.8.0: 33 files, 660KB, built in 29 seconds
+build-roothide	Install roothide theos	2026-11-05T14:43:18.5362960Z ^[[32m==>^[[0m ^[[1mUpgrading ldid dependency: ^[[32mopenssl@3^[[39m (3.6.3 -> 3.5.9)^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:43:21.0214680Z ^[[34m==>^[[0m ^[[1mperl ./Configure --prefix=/opt/homebrew/Cellar/openssl@3/3.5.9 --openssldir=^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:43:31.9761060Z ^[[34m==>^[[0m ^[[1mmake^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:45:49.1116310Z ^[[34m==>^[[0m ^[[1mmake install MANDIR=/opt/homebrew/Cellar/openssl@3/3.5.9/share/man MANSUFFIX^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:46:58.7332660Z 🍺  /opt/homebrew/Cellar/openssl@3/3.5.9: 7,587 files, 37.2MB, built in 3 minutes 40 seconds
+build-roothide	Install roothide theos	2026-11-05T14:46:58.7361000Z ^[[32m==>^[[0m ^[[1mInstalling ^[[32mldid^[[39m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:00.1393230Z ^[[34m==>^[[0m ^[[1mmake lookup2.o^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:00.5786940Z ^[[34m==>^[[0m ^[[1mmake ldid LDLIBS=lookup2.o -lcrypto -lplist-2.0^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:04.0885710Z 🍺  /opt/homebrew/Cellar/ldid/2.1.5_2: 6 files, 271.7KB, built in 5 seconds
+build-roothide	Install roothide theos	2026-11-05T14:47:04.0927330Z ^[[32m==>^[[0m ^[[1mUpgrading ^[[32mxz^[[39m^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:04.0927950Z   5.8.3 -> 5.8.4 
+build-roothide	Install roothide theos	2026-11-05T14:47:05.3439080Z ^[[34m==>^[[0m ^[[1m./configure --disable-silent-rules --disable-nls^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:21.0575220Z ^[[34m==>^[[0m ^[[1mmake check^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:37.3185160Z ^[[34m==>^[[0m ^[[1mmake install^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.2865410Z 🍺  /opt/homebrew/Cellar/xz/5.8.4: 96 files, 2.7MB, built in 35 seconds
+build-roothide	Install roothide theos	2026-11-05T14:47:39.2884330Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:39.2891410Z This is a Tier 3 configuration:
+build-roothide	Install roothide theos	2026-11-05T14:47:39.2896840Z   ^[[4mhttps://docs.brew.sh/Support-Tiers#tier-3^[[24m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.2898710Z ^[[1mYou can report issues with Tier 3 configurations to Homebrew/* repositories!^[[0m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.2900030Z   
+build-roothide	Install roothide theos	2026-11-05T14:47:39.2900830Z Read the above document before opening any issues or PRs.
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3136370Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3138330Z ^[[0;36m==> ^[[1;36mDependencies have been successfully installed!^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3139160Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3139570Z ^[[0;36m==> ^[[1;36mChecking for $THEOS environment variable...^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3139840Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3145110Z ^[[0;36m==> ^[[1;36m$THEOS is already set to '/Users/runner/theos'. Nothing to do here.^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3157340Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3157760Z ^[[0;36m==> ^[[1;36mChecking for Theos install...^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3158530Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3159730Z ^[[0;36m==> ^[[1;36mTheos does not appear to be installed. Cloning now...^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:39.3229490Z Cloning into '/Users/runner/theos'...
+build-roothide	Install roothide theos	2026-11-05T14:47:40.4798640Z Submodule 'vendor/dm.pl' (https://github.com/theos/dm.pl.git) registered for path 'vendor/dm.pl'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.4901350Z Submodule 'vendor/include' (https://github.com/roothide/headers.git) registered for path 'vendor/include'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.5004260Z Submodule 'vendor/lib' (https://github.com/roothide/lib.git) registered for path 'vendor/lib'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.5106710Z Submodule 'vendor/logos' (https://github.com/theos/logos.git) registered for path 'vendor/logos'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.5209460Z Submodule 'vendor/nic' (https://github.com/theos/nic.git) registered for path 'vendor/nic'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.5311900Z Submodule 'vendor/orion' (https://github.com/theos/orion.git) registered for path 'vendor/orion'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.5413690Z Submodule 'vendor/swift-support' (https://github.com/theos/swift-support.git) registered for path 'vendor/swift-support'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.5515900Z Submodule 'vendor/templates' (https://github.com/theos/templates.git) registered for path 'vendor/templates'
+build-roothide	Install roothide theos	2026-11-05T14:47:40.5617440Z Cloning into '/Users/runner/theos/vendor/dm.pl'...
+build-roothide	Install roothide theos	2026-11-05T14:47:41.0148160Z Cloning into '/Users/runner/theos/vendor/include'...
+build-roothide	Install roothide theos	2026-11-05T14:47:41.6469010Z Cloning into '/Users/runner/theos/vendor/lib'...
+build-roothide	Install roothide theos	2026-11-05T14:47:42.4546250Z Cloning into '/Users/runner/theos/vendor/logos'...
+build-roothide	Install roothide theos	2026-11-05T14:47:43.0209160Z Cloning into '/Users/runner/theos/vendor/nic'...
+build-roothide	Install roothide theos	2026-11-05T14:47:43.6243850Z Cloning into '/Users/runner/theos/vendor/orion'...
+build-roothide	Install roothide theos	2026-11-05T14:47:44.5479290Z Cloning into '/Users/runner/theos/vendor/swift-support'...
+build-roothide	Install roothide theos	2026-11-05T14:47:45.0271310Z Cloning into '/Users/runner/theos/vendor/templates'...
+build-roothide	Install roothide theos	2026-11-05T14:47:45.6250780Z Submodule path 'vendor/dm.pl': checked out 'd9a3b72e274226dd2823c0a7c1d6d05099f4f51c'
+build-roothide	Install roothide theos	2026-11-05T14:47:45.8012000Z Submodule path 'vendor/include': checked out '744ee65cd464becd8b06cab6eaeffc0512b371f1'
+build-roothide	Install roothide theos	2026-11-05T14:47:45.9119120Z Submodule path 'vendor/lib': checked out '85e9b5b8aff11bbefc59525c64c8f55149926e56'
+build-roothide	Install roothide theos	2026-11-05T14:47:45.9431060Z Submodule path 'vendor/logos': checked out '365a4e7028234e90bc2cbc724e5c87607130d3b3'
+build-roothide	Install roothide theos	2026-11-05T14:47:45.9748080Z Submodule path 'vendor/nic': checked out '4e7adcbeac2e4636b91e2f76341adfe4c4d0ceec'
+build-roothide	Install roothide theos	2026-11-05T14:47:46.0476660Z Submodule path 'vendor/orion': checked out '762159dc214d5aafa2edfc7554c659fc3c658b5b'
+build-roothide	Install roothide theos	2026-11-05T14:47:46.0539550Z Submodule 'fishhook' (https://github.com/facebook/fishhook.git) registered for path 'vendor/orion/fishhook'
+build-roothide	Install roothide theos	2026-11-05T14:47:46.0699110Z Cloning into '/Users/runner/theos/vendor/orion/fishhook'...
+build-roothide	Install roothide theos	2026-11-05T14:47:46.6142990Z Submodule path 'vendor/orion/fishhook': checked out 'aadc161ac3b80db07a9908851839a17ba63a9eb1'
+build-roothide	Install roothide theos	2026-11-05T14:47:46.6597630Z Submodule path 'vendor/swift-support': checked out '4cf59ff04cdb2ceb27ea2228753e0497297b6182'
+build-roothide	Install roothide theos	2026-11-05T14:47:46.7225130Z Submodule path 'vendor/templates': checked out '6c3944e281c4726f1383755d0fbb642840312d28'
+build-roothide	Install roothide theos	2026-11-05T14:47:46.7334740Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:46.7337770Z ^[[0;36m==> ^[[1;36mGit clone of Theos was successful!^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:46.7338490Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:46.7339220Z ^[[0;36m==> ^[[1;36mChecking for patched SDKs...^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:46.7448630Z 
+build-roothide	Install roothide theos	2026-11-05T14:47:46.7450260Z ^[[0;36m==> ^[[1;36mSDKs do not appear to be installed. Installing now...^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:46.8409550Z ERROR: api.github.com request failed?!
+build-roothide	Install roothide theos	2026-11-05T14:47:46.8462530Z ^[[0;31m==> ^[[1;31mSomething appears to have gone wrong. Please try again.^[[m
+build-roothide	Install roothide theos	2026-11-05T14:47:46.8528620Z ##[error]Process completed with exit code 8.
+build-roothide	Post Run actions/checkout@v4	﻿2026-11-05T14:47:46.8927630Z Post job cleanup.
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.6403420Z [command]/opt/homebrew/bin/git version
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.6505010Z git version 2.55.0
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.7016730Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/ff841db4-ce5e-481d-aa3a-a293bc994a7c/.gitconfig'
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.7120560Z Temporarily overriding HOME='/Users/runner/work/_temp/ff841db4-ce5e-481d-aa3a-a293bc994a7c' before making global git config changes
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.7222820Z Adding repository directory to the temporary git global config as a safe directory
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.7324650Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/VCam/VCam
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.7531430Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.7741850Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.8111670Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.8163560Z http.https://github.com/.extraheader
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.8185210Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.8257160Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.9204360Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+build-roothide	Post Run actions/checkout@v4	2026-11-05T14:47:47.9382730Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+build-roothide	Complete job	﻿2026-11-05T14:47:48.1478010Z Cleaning up orphan processes
+build-roothide	Complete job	2026-11-05T14:47:48.5380980Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
