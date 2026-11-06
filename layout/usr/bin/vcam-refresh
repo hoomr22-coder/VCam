@@ -44,16 +44,42 @@ if [ -f "$BASE" ]; then
 fi
 
 # 2) 已装 App：Info.plist 里带 NSCameraUsageDescription 的
+#
+#    rootless 有 /usr/bin/plutil，用它转成 XML 再解析最稳。
+#    roothide 的 bootstrap 没有 plutil（实测 70 个包一个都没带），退化成纯字节判断：
+#      * bplist 的 key 是裸 ASCII，grep -a 就能命中 NSCameraUsageDescription；
+#      * bundle id 本身也是 plist 里的一个 ASCII string，和 `uicache -l` 的 id 表比，
+#        取「长度最长且出现在该 plist 里」的那个（避免 com.foo 误配 com.foobar）。
+HAVE_PLUTIL=0
+[ -x "$PLUTIL" ] && HAVE_PLUTIL=1
+IDS=""
+if [ "$HAVE_PLUTIL" = 0 ]; then
+    IDS=$(uicache -l 2>/dev/null || true)
+    [ -n "$IDS" ] || echo "[vcam-refresh] neither plutil nor 'uicache -l'; base list only"
+fi
+
 for app in "$APPS"/*/*.app; do
     [ -d "$app" ] || continue
     info="$app/Info.plist"
     [ -f "$info" ] || continue
-    xml=$("$PLUTIL" -convert xml1 -o - "$info" 2>/dev/null) || continue
-    [ -n "$xml" ] || continue
-    printf '%s\n' "$xml" | grep -q '<key>NSCameraUsageDescription</key>' || continue
-    id=$(printf '%s\n' "$xml" \
-        | grep -A1 '<key>CFBundleIdentifier</key>' \
-        | grep -o '<string>[^<]*' | head -1 | sed 's/<string>//')
+    if [ "$HAVE_PLUTIL" = 1 ]; then
+        xml=$("$PLUTIL" -convert xml1 -o - "$info" 2>/dev/null) || continue
+        [ -n "$xml" ] || continue
+        printf '%s\n' "$xml" | grep -q '<key>NSCameraUsageDescription</key>' || continue
+        id=$(printf '%s\n' "$xml" \
+            | grep -A1 '<key>CFBundleIdentifier</key>' \
+            | grep -o '<string>[^<]*' | head -1 | sed 's/<string>//')
+    else
+        grep -qa 'NSCameraUsageDescription' "$info" || continue
+        id=""
+        while IFS= read -r cand; do
+            [ -n "$cand" ] || continue
+            grep -qaF "$cand" "$info" || continue
+            [ ${#cand} -gt ${#id} ] && id="$cand"
+        done <<EOF
+$IDS
+EOF
+    fi
     [ -n "$id" ] && add "$id"
 done
 
