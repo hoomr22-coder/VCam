@@ -43,45 +43,38 @@ if [ -f "$BASE" ]; then
     done < "$BASE"
 fi
 
-# 2) 已装 App：Info.plist 里带 NSCameraUsageDescription 的
+# 2) 已装 App：全量纳入（现有 App 全部替换，不按相机权限过滤）
 #
-#    rootless 有 /usr/bin/plutil，用它转成 XML 再解析最稳。
-#    roothide 的 bootstrap 没有 plutil（实测 70 个包一个都没带），退化成纯字节判断：
-#      * bplist 的 key 是裸 ASCII，grep -a 就能命中 NSCameraUsageDescription；
-#      * bundle id 本身也是 plist 里的一个 ASCII string，和 `uicache -l` 的 id 表比，
-#        取「长度最长且出现在该 plist 里」的那个（避免 com.foo 误配 com.foobar）。
+#    rootless 有 /usr/bin/plutil，逐个 App 读 CFBundleIdentifier。
+#    roothide 的 bootstrap 没有 plutil（实测 70 个包一个都没带），改用 `uicache -l`
+#    直接拿全部已装 bundle id —— 跟 Info.plist 无关，所以不需要字节匹配那一套。
 HAVE_PLUTIL=0
 [ -x "$PLUTIL" ] && HAVE_PLUTIL=1
-IDS=""
-if [ "$HAVE_PLUTIL" = 0 ]; then
-    IDS=$(uicache -l 2>/dev/null || true)
-    [ -n "$IDS" ] || echo "[vcam-refresh] neither plutil nor 'uicache -l'; base list only"
-fi
 
-for app in "$APPS"/*/*.app; do
-    [ -d "$app" ] || continue
-    info="$app/Info.plist"
-    [ -f "$info" ] || continue
-    if [ "$HAVE_PLUTIL" = 1 ]; then
+if [ "$HAVE_PLUTIL" = 1 ]; then
+    for app in "$APPS"/*/*.app; do
+        [ -d "$app" ] || continue
+        info="$app/Info.plist"
+        [ -f "$info" ] || continue
         xml=$("$PLUTIL" -convert xml1 -o - "$info" 2>/dev/null) || continue
         [ -n "$xml" ] || continue
-        printf '%s\n' "$xml" | grep -q '<key>NSCameraUsageDescription</key>' || continue
         id=$(printf '%s\n' "$xml" \
             | grep -A1 '<key>CFBundleIdentifier</key>' \
             | grep -o '<string>[^<]*' | head -1 | sed 's/<string>//')
-    else
-        grep -qa 'NSCameraUsageDescription' "$info" || continue
-        id=""
-        while IFS= read -r cand; do
-            [ -n "$cand" ] || continue
-            grep -qaF "$cand" "$info" || continue
-            [ ${#cand} -gt ${#id} ] && id="$cand"
+        add "$id"
+    done
+else
+    IDS=$(uicache -l 2>/dev/null || true)
+    if [ -n "$IDS" ]; then
+        while IFS= read -r id; do
+            add "${id%$'\r'}"
         done <<EOF
 $IDS
 EOF
+    else
+        echo "[vcam-refresh] neither plutil nor 'uicache -l'; base list only"
     fi
-    [ -n "$id" ] && add "$id"
-done
+fi
 
 count=$(wc -l < "$TMP" | tr -d ' ')
 

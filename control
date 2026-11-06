@@ -1,6 +1,6 @@
 Package: com.yourname.vcam
 Name: VCam
-Version: 1.0.38
+Version: 1.0.39
 Architecture: iphoneos-arm
 Description: 虚拟相机；拉取 8899 的 /idle.mp4（跟随当前模板）+ DCIM 1.5s 轮询；音量键唤起
 Maintainer: Your Name
