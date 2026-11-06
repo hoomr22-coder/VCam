@@ -38,3 +38,4 @@ output/
 
 # 临时构建/日志
 jl*.txt
+.hermes/
